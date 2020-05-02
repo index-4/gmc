@@ -91,6 +91,8 @@ def parse_fix(fix_message: str):
     if "ref" in flags.keys():
         message += f'-m "references {flags["ref"]}"'
 
+    print(message)
+
     os.system(f"git commit {message}")
 
 
