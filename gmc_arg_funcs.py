@@ -68,9 +68,15 @@ def parse_feature(feature_message: str):
     message += feature_desc + '" '  # end description
 
     if "ref" in flags.keys():
-        message += f'-m "references {flags["ref"]}"'
+        message += f'-m "references {flags["ref"]}" '
+
+    if "done" in flags.keys():
+        message += f'-m "changelog-relevant" '
+        finish_feature = True
 
     os.system(f"git commit {message}")
+    if finish_feature:
+        os.system(f"git flow feature finish")
 
 
 def parse_fix(fix_message: str):
@@ -89,11 +95,15 @@ def parse_fix(fix_message: str):
     message += '" '  # end reasons and solutions
 
     if "ref" in flags.keys():
-        message += f'-m "references {flags["ref"]}"'
+        message += f'-m "references {flags["ref"]}" '
 
-    print(message)
+    if "done" in flags.keys():
+        message += f'-m "changelog-relevant" '
+        finish_bugfix = True
 
     os.system(f"git commit {message}")
+    if finish_bugfix:
+        os.system("git flow bugfix finish")
 
 
 # just in case ¯\_(ツ)_/¯
@@ -113,6 +123,7 @@ gmc_args = AliasDict(
         "fi": (True, 1, parse_fix),
         "fe": (True, 1, parse_feature),
         "r": (True, 2, lambda ref: flags.update({"ref": ref})),
+        "d": (False, 2, lambda: flags.update({"done": None}))
     },
     aliases={
         # help aliases
@@ -138,6 +149,9 @@ gmc_args = AliasDict(
         "--feature": "fe",
         # reference aliases
         "-r": "r",
-        "--reference": "r"
+        "--reference": "r",
+        # done aliases
+        "-d": "d",
+        "--done": "d",
     }
 )
