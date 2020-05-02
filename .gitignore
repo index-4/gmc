@@ -2,6 +2,6 @@ build/
 build/*
 dist/
 dist/*
-__pychache__/
-__pychache__/*
+__pycache__/
+__pycache__/*
 *.spec
