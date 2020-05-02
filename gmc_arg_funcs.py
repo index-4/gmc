@@ -61,8 +61,14 @@ def parse_feature(feature_message: str):
     changes = [change.strip() for change in changes.split("-")]
 
     # build commit message
-    message = [f'-m "feature {feature_name}:"']
-    feature_desc = f'-m "{f"  - {}"}"'
+    message = f'-m "feature {feature_name}:" '
+    feature_desc = f'-m "  - {changes[0]}'
+    for change in changes[1:]:
+        feature_desc += f"\
+          - {change}"
+    message += feature_desc + '"'
+
+    os.system(f"git commit {message}")
 
 
 def parse_fix():
@@ -84,7 +90,7 @@ gmc_args = AliasDict(
         "a": (True, 2, git_magic_add),
         "na": (False, 3, lambda: flags.append("na")),
         "fi": (True, 1, "kuchen"),
-        "fe": (True, 1, ""),
+        "fe": (True, 1, parse_feature),
     },
     aliases={
         # help aliases
