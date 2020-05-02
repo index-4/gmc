@@ -65,7 +65,7 @@ def parse_feature(feature_message: str):
     feature_desc = f'-m "  - {changes[0]}'  # description
     for change in changes[1:]:
         feature_desc += f"{os.linesep}  - {change}"
-    message += feature_desc + '"'  # end description
+    message += feature_desc + '" '  # end description
 
     if "ref" in flags.keys():
         message += f'-m "references {flags["ref"]}"'
@@ -86,7 +86,7 @@ def parse_fix(fix_message: str):
     message += f'{os.linesep}  solutions:'  # solutions
     for solution in solutions:
         message += f'{os.linesep}    - {solution}'
-    message += '"'  # end reasons and solutions
+    message += '" '  # end reasons and solutions
 
     if "ref" in flags.keys():
         message += f'-m "references {flags["ref"]}"'
@@ -112,7 +112,7 @@ gmc_args = AliasDict(
         "na": (False, 3, lambda: flags.update({"na": None})),
         "fi": (True, 1, parse_fix),
         "fe": (True, 1, parse_feature),
-        "r": (True, 1, lambda ref: flags.update({"ref": ref})),
+        "r": (True, 2, lambda ref: flags.update({"ref": ref})),
     },
     aliases={
         # help aliases
