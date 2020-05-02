@@ -64,8 +64,8 @@ def parse_feature(feature_message: str):
     message = f'-m "feature {feature_name}:" '
     feature_desc = f'-m "  - {changes[0]}'
     for change in changes[1:]:
-        feature_desc += f"\
-- {change}"
+        feature_desc += f"  \
+  - {change}"
     message += feature_desc + '"'
 
     os.system(f"git commit {message}")
