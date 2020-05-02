@@ -4,3 +4,4 @@ dist/
 dist/*
 __pychache__/
 __pychache__/*
+*.spec
