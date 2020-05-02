@@ -2,3 +2,5 @@ build/
 build/*
 dist/
 dist/*
+__pychache__/
+__pychache__/*
