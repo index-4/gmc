@@ -24,6 +24,7 @@ def parse_args() -> list:
 
 
 if __name__ == "__main__":
+    # unnecessary comment
     tasks = parse_args()
     batch = Batch(tasks)
     batch.run()
