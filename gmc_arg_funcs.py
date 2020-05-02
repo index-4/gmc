@@ -19,7 +19,7 @@ class AliasDict(dict):
         self.aliases[alias] = key
 
 
-flags = []
+flags = {}
 
 
 def display_help():
@@ -39,7 +39,7 @@ def git_push():
 
 
 def git_magic_add(target_directory: str = None):
-    if "na" in flags:
+    if "na" in flags.keys():
         print("Preventing magic add")
         return
     stash_directory = target_directory
@@ -85,6 +85,9 @@ def parse_fix(fix_message: str):
         message += f'{os.linesep}    - {solution}'
     message += '"'  # end reasons and solutions
 
+    if "ref" in flags.keys():
+        message += f'-m "references {flags["ref"]}"'
+
     os.system(f"git commit {message}")
 
 
@@ -101,9 +104,10 @@ gmc_args = AliasDict(
         "p": (False, 0, git_push),
         "s": (False, 0, git_status),
         "a": (True, 2, git_magic_add),
-        "na": (False, 3, lambda: flags.append("na")),
+        "na": (False, 3, lambda: flags.update({"na": None})),
         "fi": (True, 1, parse_fix),
         "fe": (True, 1, parse_feature),
+        "r": (True, 1, lambda ref: flags.update({"ref": ref})),
     },
     aliases={
         # help aliases
@@ -122,8 +126,13 @@ gmc_args = AliasDict(
         "S": "s",
         "--status": "s",
         # fix aliases
+        "-fi": "fi",
         "--fix": "fi",
         # feature aliases
+        "-fe": "fe",
         "--feature": "fe",
+        # reference aliases
+        "-r": "r",
+        "--reference": "r"
     }
 )
