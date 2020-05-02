@@ -1,4 +1,4 @@
-class Task():
+class Task:
 
     def __init__(self, runnable, prio, *args):
         self._runnable = runnable
@@ -11,7 +11,8 @@ class Task():
         else:
             self._runnable()
 
-class Batch():
+
+class Batch:
 
     _tasks = []
 
@@ -23,6 +24,7 @@ class Batch():
 
     def run(self):
         # sort by prio -> exec higher prioritised tasks first
-        self._tasks = sorted(self._tasks, key=lambda task: task.prio, reverse=True)
+        self._tasks = sorted(
+            self._tasks, key=lambda task: task.prio, reverse=True)
         for task in self._tasks:
             task.run()

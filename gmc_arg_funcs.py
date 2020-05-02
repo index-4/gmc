@@ -1,11 +1,13 @@
 import os
 import sys
 
+
 class AliasDict(dict):
 
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
-        self.aliases = kwargs.get("aliases") if kwargs.get("aliases") is not None else {}
+        self.aliases = kwargs.get("aliases") if kwargs.get(
+            "aliases") is not None else {}
 
     def __getitem__(self, key):
         return dict.__getitem__(self, self.aliases.get(key, key))
@@ -42,7 +44,7 @@ def git_magic_add(target_directory: str = None):
         return
     stash_directory = target_directory
     if stash_directory is None:
-        max_iter = 0 # max out at 10 dirs up 
+        max_iter = 0  # max out at 10 dirs up
         while not os.path.exists(".git") and max_iter < 10:
             os.chdir("..")
             max_iter += 1
@@ -52,6 +54,19 @@ def git_magic_add(target_directory: str = None):
             sys.exit(-1)
     os.system(f"git add {stash_directory}")
     print(f"Stashed files from directory {stash_directory}")
+
+
+def parse_feature(feature_message: str):
+    feature_name, changes = feature_message.split("_")
+    changes = [change.strip() for change in changes.split("-")]
+
+    # build commit message
+    message = [f'-m "feature {feature_name}:"']
+    feature_desc = f'-m "{f"  - {change}"}"'
+
+
+def parse_fix():
+    pass
 
 
 # just in case ¯\_(ツ)_/¯
@@ -68,7 +83,8 @@ gmc_args = AliasDict(
         "s": (False, 0, git_status),
         "a": (True, 2, git_magic_add),
         "na": (False, 3, lambda: flags.append("na")),
-        "f": (True, 1, "kuchen")
+        "fi": (True, 1, "kuchen"),
+        "fe": (True, 1, ""),
     },
     aliases={
         # help aliases
@@ -86,5 +102,9 @@ gmc_args = AliasDict(
         "-s": "s",
         "S": "s",
         "--status": "s",
+        # fix aliases
+        "--fix": "fi",
+        # feature aliases
+        "--feature": "fe",
     }
 )

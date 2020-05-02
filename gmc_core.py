@@ -10,11 +10,11 @@ def parse_args() -> list:
     try:
         while arg := next(arg_iter):
             if (task := gmc_args[arg]) is not None:
-                if task[0]: # must have args
+                if task[0]:  # must have args
                     tasks.append(Task(task[2], task[1], next(arg_iter)))
                 else:
                     tasks.append(Task(task[2], task[1]))
-    except StopIteration: # no more args to parse
+    except StopIteration:  # no more args to parse
         pass
     except Exception as ex:
         print(ex)
@@ -23,7 +23,7 @@ def parse_args() -> list:
     return tasks
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     tasks = parse_args()
     batch = Batch(tasks)
     batch.run()
