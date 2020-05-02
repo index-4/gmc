@@ -67,6 +67,9 @@ def parse_feature(feature_message: str):
         feature_desc += f"{os.linesep}  - {change}"
     message += feature_desc + '"'  # end description
 
+    if "ref" in flags.keys():
+        message += f'-m "references {flags["ref"]}"'
+
     os.system(f"git commit {message}")
 
 
