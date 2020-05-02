@@ -61,17 +61,31 @@ def parse_feature(feature_message: str):
     changes = [change.strip() for change in changes.split("-")]
 
     # build commit message
-    message = f'-m "feature {feature_name}:" '
-    feature_desc = f'-m "  - {changes[0]}'
+    message = f'-m "feature {feature_name}:" '  # header
+    feature_desc = f'-m "  - {changes[0]}'  # description
     for change in changes[1:]:
         feature_desc += f"{os.linesep}  - {change}"
-    message += feature_desc + '"'
+    message += feature_desc + '"'  # end description
 
     os.system(f"git commit {message}")
 
 
-def parse_fix():
-    pass
+def parse_fix(fix_message: str):
+    fix_name, reasons, solutions = fix_message.split("_")
+    reasons = [reason.strip() for reason in reasons.split("-")]
+    solutions = [solution.strip() for solution in solutions.split("-")]
+
+    # build commit message
+    message = f'-m "fix for {fix_name}:" '  # header
+    message += f'-m "  reasons:'  # reasons (also opening quotes)
+    for reason in reasons:
+        message += f'{os.linesep}    - {reason}'
+    message += f'{os.linesep}  solutions:'  # solutions
+    for solution in solutions:
+        message += f'{os.linesep}    - {solution}'
+    message += '"'  # end reasons and solutions
+
+    os.system(f"git commit {message}")
 
 
 # just in case ¯\_(ツ)_/¯
@@ -88,7 +102,7 @@ gmc_args = AliasDict(
         "s": (False, 0, git_status),
         "a": (True, 2, git_magic_add),
         "na": (False, 3, lambda: flags.append("na")),
-        "fi": (True, 1, "kuchen"),
+        "fi": (True, 1, parse_fix),
         "fe": (True, 1, parse_feature),
     },
     aliases={
