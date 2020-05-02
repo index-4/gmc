@@ -24,12 +24,16 @@ flags = {}
 
 def display_help():
     print("Welcome to gmc (Git magic commit)!")
-    print("This is our git commit message formater that helps us with taming the wild wild git commits.\n")
+    print("This is our git commit message formatter that helps us with taming the wild wild git commits.\n")
     print("Available arguments:")
-    print("  [h | -h | H | --help]   : shows this message")
-    print("  [s | -s | S | --status] : print git status")
-    print("  [p | -p | P | --push]   : tells gmc to push the current state")
-    print("  [na | -na | --no-add]   : advises gmc to drop magic add (basicly git add that searches for root git dir)")
+    print("  [h | -h | H | --help]                 : shows this message")
+    print("  [s | -s | S | --status]               : print git status")
+    print("  [fe | -fe | --feature <feature_desc>] : adds feature description to commit message; for more info about how to write descriptions see gmc confluence")
+    print("  [fi | -fi | --fix <feature_desc>]     : adds fix description to commit message; for more info about how to write descriptions see gmc confluence")
+    print("  [d | -d | --done]                     : tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag")
+    print("  [r | -r | --references <issue_id>]    : adds a reference to a GitHub or Jira issue")
+    print("  [p | -p | P | --push]                 : tells gmc to push the current state")
+    print("  [na | -na | --no-add]                 : advises gmc to drop magic add (basicly git add that searches for root git dir)")
     sys.exit(0)
 
 
