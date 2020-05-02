@@ -62,7 +62,7 @@ def parse_feature(feature_message: str):
 
     # build commit message
     message = [f'-m "feature {feature_name}:"']
-    feature_desc = f'-m "{f"  - {change}"}"'
+    feature_desc = f'-m "{f"  - {}"}"'
 
 
 def parse_fix():
