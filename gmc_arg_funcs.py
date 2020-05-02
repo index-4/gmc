@@ -61,6 +61,7 @@ def git_magic_add(target_directory: str = None):
 
 
 def parse_feature(feature_message: str):
+    finish_feature = False
     feature_name, changes = feature_message.split("_")
     changes = [change.strip() for change in changes.split("-")]
 
@@ -84,6 +85,7 @@ def parse_feature(feature_message: str):
 
 
 def parse_fix(fix_message: str):
+    finish_bugfix = False
     fix_name, reasons, solutions = fix_message.split("_")
     reasons = [reason.strip() for reason in reasons.split("-")]
     solutions = [solution.strip() for solution in solutions.split("-")]
