@@ -66,7 +66,7 @@ def parse_feature(feature_message: str):
     changes = [change.strip() for change in changes.split("-")]
 
     # build commit message
-    message = f'-m "feature {feature_name}:" '  # header
+    message = f'-m "feature {feature_name}" '  # header
     feature_desc = f'-m "  - {changes[0]}'  # description
     for change in changes[1:]:
         feature_desc += f"{os.linesep}  - {change}"
@@ -91,7 +91,7 @@ def parse_fix(fix_message: str):
     solutions = [solution.strip() for solution in solutions.split("-")]
 
     # build commit message
-    message = f'-m "fix for {fix_name}:" '  # header
+    message = f'-m "fix for {fix_name}" '  # header
     message += f'-m "  reasons:'  # reasons (also opening quotes)
     for reason in reasons:
         message += f'{os.linesep}    - {reason}'
