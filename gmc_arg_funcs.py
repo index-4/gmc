@@ -67,7 +67,7 @@ def parse_feature(feature_message: str):
         feature_desc += f"\
           - {change}"
     message += feature_desc + '"'
-
+    
     os.system(f"git commit {message}")
 
 
