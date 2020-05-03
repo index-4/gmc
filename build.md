@@ -1,3 +1,4 @@
+## building
 pyinstaller gmc_core.py --onefile -n gmc  
 
 ## linux
