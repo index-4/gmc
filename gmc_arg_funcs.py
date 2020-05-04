@@ -31,9 +31,9 @@ def display_help():
     print("  [fe | -fe | --feature <feature_desc>] : adds feature description to commit message; for more info about how to write descriptions see gmc confluence")
     print("  [fi | -fi | --fix <feature_desc>]     : adds fix description to commit message; for more info about how to write descriptions see gmc confluence")
     print("  [d | -d | --done]                     : tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag")
-    print("  [r | -r | --references <issue_id>]    : adds a reference to a GitHub or Jira issue")
+    print("  [r | -r | --reference <issue_id>]     : adds a reference to a GitHub or Jira issue")
     print("  [p | -p | P | --push]                 : tells gmc to push the current state")
-    print("  [na | -na | --no-add]                 : advises gmc to drop magic add (basicly git add that searches for root git dir)")
+    print("  [na | -na | --no-add]                 : advises gmc to drop magic add (basiclly git add that searches for root git dir)")
     sys.exit(0)
 
 
