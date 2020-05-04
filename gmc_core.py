@@ -18,8 +18,9 @@ def parse_args() -> list:
         pass
     except Exception as ex:
         print(ex)
-    # explicitly add magic add to tasks
-    tasks.insert(0, Task(git_magic_add, 2))
+    # explicitly add magic add to tasks, if not single command
+    if len(sys.argv) > 2:
+        tasks.insert(0, Task(git_magic_add, 2))
     return tasks
 
 
