@@ -16,16 +16,19 @@ def parse_args() -> list:
                     tasks.append(Task(task[2], task[1]))
     except StopIteration:  # no more args to parse
         pass
+    except KeyError as failed_key:
+        print(f"Given argument {failed_key} does not exist!")
+        sys.exit()
     except Exception as ex:
         print(ex)
-    # explicitly add magic add to tasks, if not single command
-    if len(sys.argv) > 2:
+        sys.exit()
+    # explicitly add magic add to tasks, if not single command or gmc only
+    if len(sys.argv) != 2:
         tasks.insert(0, Task(git_magic_add, 2))
     return tasks
 
 
 if __name__ == "__main__":
-    # unnecessary comment
     tasks = parse_args()
     batch = Batch(tasks)
     batch.run()
