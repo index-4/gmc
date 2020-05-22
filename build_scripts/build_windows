@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "building for windoofs"
+wine ~/.wine/drive_c/users/secretone/Python38/Scripts/pyinstaller.exe gmc_core.py --onefile -n gmc
+echo "successfully built for windoofs"
