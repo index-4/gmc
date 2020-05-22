@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "building for linux"
+pyinstaller gmc_core.py --onefile -n gmc
+echo "successfully built for linux"
