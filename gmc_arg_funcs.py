@@ -65,10 +65,10 @@ def check_flags(commit_message: str):
     finish_flow = False
 
     if "ref" in flags.keys():
-        message += f'-m "references {flags["ref"]}" '
+        commit_message += f'-m "references {flags["ref"]}" '
 
     if "done" in flags.keys():
-        message += f'-m "changelog-relevant" '
+        commit_message += f'-m "changelog-relevant" '
         finish_flow = True
 
     return finish_flow
@@ -189,6 +189,9 @@ gmc_args = AliasDict(
         # feature aliases
         "-fe": "fe",
         "--feature": "fe",
+        # commit only aliases
+        "-co": "co",
+        "--commit-only": "co",
         # reference aliases
         "-r": "r",
         "--reference": "r",
