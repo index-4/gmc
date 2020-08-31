@@ -1,5 +1,6 @@
 import os
 import sys
+from gmc_helper_classes import Help
 
 
 class AliasDict(dict):
@@ -23,18 +24,27 @@ flags = {}
 
 
 def display_help():
-    print("Welcome to gmc (Git magic commit)!")
-    print("This is our git commit message formatter that helps us with taming the wild wild git commits.\n")
-    print("Available arguments:")
-    print("  [h | -h | H | --help]                    : shows this message")
-    print("  [s | -s | S | --status]                  : print git status")
-    print("  [fe | -fe | --feature] <feature_desc>    : adds feature description to commit message; for more info about how to write descriptions see gmc confluence")
-    print("  [fi | -fi | --fix] <feature_desc>        : adds fix description to commit message; for more info about how to write descriptions see gmc confluence")
-    print("  [co | -co | --commit-only] <commit_desc> : only stashes changes and commits them")
-    print("  [d | -d | --done]                        : tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag")
-    print("  [r | -r | --reference] <issue_id>        : adds a reference to a GitHub or Jira issue")
-    print("  [p | -p | P | --push]                    : tells gmc to push the current state")
-    print("  [na | -na | --no-add]                    : advises gmc to drop magic add (basiclly git add that searches for root git dir)")
+    help_message = Help(
+        "Welcome to gmc (Git magic commit)!\nThis is our git commit message formatter that helps us with taming the wild wild git commits.",
+        [
+            (["h", "-h", "H", "--help"],
+             "shows this message; what did you think it would do?"),
+            (["s", "-s", "S", "--status"], "prints git status"),
+            (["fe", "-fe", "--feature <feature_dec>"],
+             "adds feature description to commit message; for more info about how to write descriptions see gmc confluence"),
+            (["fi", "-fi", "--fix <fix_description>"],
+             "adds fix description to commit message; for more info about how to write descriptions see gmc confluence"),
+            (["co", "-co", "--commit-only <commit_desc>"],
+             "only stashes changes and adds commit message"),
+            (["d", "-d", "--done"], "tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag"),
+            (["r", "-r", "--reference <issue_id>"],
+             "adds a reference to a GitHub or Jira issue"),
+            (["p", "-p", "P", "--push"], "tells gmc to push the current state"),
+            (["na", "-na", "--no-add"],
+             "advises gmc to drop magic add (basically git add that searches for root git dir)")
+        ]
+    )
+    print(help_message)
     sys.exit(0)
 
 
