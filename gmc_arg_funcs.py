@@ -26,14 +26,15 @@ def display_help():
     print("Welcome to gmc (Git magic commit)!")
     print("This is our git commit message formatter that helps us with taming the wild wild git commits.\n")
     print("Available arguments:")
-    print("  [h | -h | H | --help]                 : shows this message")
-    print("  [s | -s | S | --status]               : print git status")
-    print("  [fe | -fe | --feature <feature_desc>] : adds feature description to commit message; for more info about how to write descriptions see gmc confluence")
-    print("  [fi | -fi | --fix <feature_desc>]     : adds fix description to commit message; for more info about how to write descriptions see gmc confluence")
-    print("  [d | -d | --done]                     : tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag")
-    print("  [r | -r | --reference <issue_id>]     : adds a reference to a GitHub or Jira issue")
-    print("  [p | -p | P | --push]                 : tells gmc to push the current state")
-    print("  [na | -na | --no-add]                 : advises gmc to drop magic add (basiclly git add that searches for root git dir)")
+    print("  [h | -h | H | --help]                    : shows this message")
+    print("  [s | -s | S | --status]                  : print git status")
+    print("  [fe | -fe | --feature] <feature_desc>    : adds feature description to commit message; for more info about how to write descriptions see gmc confluence")
+    print("  [fi | -fi | --fix] <feature_desc>        : adds fix description to commit message; for more info about how to write descriptions see gmc confluence")
+    print("  [co | -co | --commit-only] <commit_desc> : only stashes changes and commits them")
+    print("  [d | -d | --done]                        : tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag")
+    print("  [r | -r | --reference] <issue_id>        : adds a reference to a GitHub or Jira issue")
+    print("  [p | -p | P | --push]                    : tells gmc to push the current state")
+    print("  [na | -na | --no-add]                    : advises gmc to drop magic add (basiclly git add that searches for root git dir)")
     sys.exit(0)
 
 
@@ -60,6 +61,19 @@ def git_magic_add(target_directory: str = None):
     print(f"Stashed files from directory {stash_directory}")
 
 
+def check_flags(commit_message: str):
+    finish_flow = False
+
+    if "ref" in flags.keys():
+        commit_message += f'-m "references {flags["ref"]}" '
+
+    if "done" in flags.keys():
+        commit_message += f'-m "changelog-relevant" '
+        finish_flow = True
+
+    return finish_flow
+
+
 def parse_feature(feature_message: str):
     finish_feature = False
     feature_name, changes = feature_message.split("_")
@@ -72,12 +86,7 @@ def parse_feature(feature_message: str):
         feature_desc += f"{os.linesep}  - {change}"
     message += feature_desc + '" '  # end description
 
-    if "ref" in flags.keys():
-        message += f'-m "references {flags["ref"]}" '
-
-    if "done" in flags.keys():
-        message += f'-m "changelog-relevant" '
-        finish_feature = True
+    finish_feature = check_flags(message)
 
     os.system(f"git commit {message}")
     if finish_feature:
@@ -100,16 +109,42 @@ def parse_fix(fix_message: str):
         message += f'{os.linesep}    - {solution}'
     message += '" '  # end reasons and solutions
 
-    if "ref" in flags.keys():
-        message += f'-m "references {flags["ref"]}" '
-
-    if "done" in flags.keys():
-        message += f'-m "changelog-relevant" '
-        finish_bugfix = True
+    finish_bugfix = check_flags(message)
 
     os.system(f"git commit {message}")
     if finish_bugfix:
         os.system("git flow bugfix finish")
+
+
+def parse_commit_only(commit_message: str):
+
+    commit_name = None
+
+    try:
+        commit_name, changes = commit_message.split("_")
+        changes = [change.strip() for change in changes.split("-")]
+    except:
+        # well looks like one omitted the heading :(
+        changes = [change.strip() for change in commit_message.split("-")]
+
+    # admit that someone tried that
+    if "done" in flags.keys() or "ref" in flags.keys():
+        print("Nice try! Though you can't reference or end a flow in a commit only ;)")
+
+    # build commit message
+    if commit_name is not None:
+        message = f'-m "commit {commit_name}" '  # header
+        commit_desc = f'-m "  - {changes[0]}'  # description
+        for change in changes[1:]:
+            commit_desc += f"{os.linesep}  - {change}"
+        message += commit_desc + '" '  # end description
+    else:  # omitted header
+        message = f'-m "  - {changes[0]}'  # description
+        for change in changes[1:]:
+            message += f"{os.linesep}  - {change}"
+        message += '" '  # end description
+
+    os.system(f"git commit {message}")
 
 
 # just in case ¯\_(ツ)_/¯
@@ -128,6 +163,7 @@ gmc_args = AliasDict(
         "na": (False, 3, lambda: flags.update({"na": None})),
         "fi": (True, 1, parse_fix),
         "fe": (True, 1, parse_feature),
+        "co": (True, 1, parse_commit_only),
         "r": (True, 2, lambda ref: flags.update({"ref": ref})),
         "d": (False, 2, lambda: flags.update({"done": None}))
     },
@@ -153,6 +189,9 @@ gmc_args = AliasDict(
         # feature aliases
         "-fe": "fe",
         "--feature": "fe",
+        # commit only aliases
+        "-co": "co",
+        "--commit-only": "co",
         # reference aliases
         "-r": "r",
         "--reference": "r",
