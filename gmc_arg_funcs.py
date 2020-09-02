@@ -39,6 +39,7 @@ def display_help():
             (["d", "-d", "--done"], "tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag"),
             (["r", "-r", "--reference <issue_id>"],
              "adds a reference to a GitHub or Jira issue"),
+            (["sc", "-sc", "--store-credentials"], "inits the git credential helper process for the local repository"),
             (["p", "-p", "P", "--push"], "tells gmc to push the current state"),
             (["na", "-na", "--no-add"],
              "advises gmc to drop magic add (basically git add that searches for root git dir)")
@@ -157,6 +158,11 @@ def parse_commit_only(commit_message: str):
     os.system(f"git commit {message}")
 
 
+def parse_store_credentials():
+    os.system("git config credential.helper store")
+    os.system("git push")
+
+
 # just in case ¯\_(ツ)_/¯
 def git_status():
     os.system("git status")
@@ -174,6 +180,7 @@ gmc_args = AliasDict(
         "fi": (True, 1, parse_fix),
         "fe": (True, 1, parse_feature),
         "co": (True, 1, parse_commit_only),
+        "sc": (False, 0, parse_store_credentials),
         "r": (True, 2, lambda ref: flags.update({"ref": ref})),
         "d": (False, 2, lambda: flags.update({"done": None}))
     },
@@ -202,6 +209,9 @@ gmc_args = AliasDict(
         # commit only aliases
         "-co": "co",
         "--commit-only": "co",
+        # store credentials aliases
+        "-sc": "sc",
+        "--store-credentials": "sc",
         # reference aliases
         "-r": "r",
         "--reference": "r",
