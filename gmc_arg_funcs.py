@@ -1,5 +1,7 @@
 import os
 import sys
+import gmc_emojis
+from gmc_helper_classes import Help
 
 
 class AliasDict(dict):
@@ -23,18 +25,28 @@ flags = {}
 
 
 def display_help():
-    print("Welcome to gmc (Git magic commit)!")
-    print("This is our git commit message formatter that helps us with taming the wild wild git commits.\n")
-    print("Available arguments:")
-    print("  [h | -h | H | --help]                    : shows this message")
-    print("  [s | -s | S | --status]                  : print git status")
-    print("  [fe | -fe | --feature] <feature_desc>    : adds feature description to commit message; for more info about how to write descriptions see gmc confluence")
-    print("  [fi | -fi | --fix] <feature_desc>        : adds fix description to commit message; for more info about how to write descriptions see gmc confluence")
-    print("  [co | -co | --commit-only] <commit_desc> : only stashes changes and commits them")
-    print("  [d | -d | --done]                        : tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag")
-    print("  [r | -r | --reference] <issue_id>        : adds a reference to a GitHub or Jira issue")
-    print("  [p | -p | P | --push]                    : tells gmc to push the current state")
-    print("  [na | -na | --no-add]                    : advises gmc to drop magic add (basiclly git add that searches for root git dir)")
+    help_message = Help(
+        "Welcome to gmc (Git magic commit)!\nThis is our git commit message formatter that helps us with taming the wild wild git commits.",
+        [
+            (["h", "-h", "H", "--help"],
+             "shows this message; what did you think it would do?"),
+            (["s", "-s", "S", "--status"], "prints git status"),
+            (["fe", "-fe", "--feature <feature_dec>"],
+             "adds feature description to commit message; for more info about how to write descriptions see gmc confluence"),
+            (["fi", "-fi", "--fix <fix_description>"],
+             "adds fix description to commit message; for more info about how to write descriptions see gmc confluence"),
+            (["co", "-co", "--commit-only <commit_desc>"],
+             "only stashes changes and adds commit message"),
+            (["d", "-d", "--done"], "tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag"),
+            (["r", "-r", "--reference <issue_id>"],
+             "adds a reference to a GitHub or Jira issue"),
+            (["sc", "-sc", "--store-credentials"], "inits the git credential helper process for the local repository"),
+            (["p", "-p", "P", "--push"], "tells gmc to push the current state"),
+            (["na", "-na", "--no-add"],
+             "advises gmc to drop magic add (basically git add that searches for root git dir)")
+        ]
+    )
+    print(help_message)
     sys.exit(0)
 
 
@@ -80,7 +92,7 @@ def parse_feature(feature_message: str):
     changes = [change.strip() for change in changes.split("-")]
 
     # build commit message
-    message = f'-m "feature {feature_name}" '  # header
+    message = f'-m "feature {feature_name} {gmc_emojis.feature()}" '  # header
     feature_desc = f'-m "  - {changes[0]}'  # description
     for change in changes[1:]:
         feature_desc += f"{os.linesep}  - {change}"
@@ -100,7 +112,7 @@ def parse_fix(fix_message: str):
     solutions = [solution.strip() for solution in solutions.split("-")]
 
     # build commit message
-    message = f'-m "fix for {fix_name}" '  # header
+    message = f'-m "fix for {fix_name} {gmc_emojis.fix()}" '  # header
     message += f'-m "  reasons:'  # reasons (also opening quotes)
     for reason in reasons:
         message += f'{os.linesep}    - {reason}'
@@ -147,6 +159,11 @@ def parse_commit_only(commit_message: str):
     os.system(f"git commit {message}")
 
 
+def parse_store_credentials():
+    os.system("git config credential.helper store")
+    os.system("git push")
+
+
 # just in case ¯\_(ツ)_/¯
 def git_status():
     os.system("git status")
@@ -164,6 +181,7 @@ gmc_args = AliasDict(
         "fi": (True, 1, parse_fix),
         "fe": (True, 1, parse_feature),
         "co": (True, 1, parse_commit_only),
+        "sc": (False, 0, parse_store_credentials),
         "r": (True, 2, lambda ref: flags.update({"ref": ref})),
         "d": (False, 2, lambda: flags.update({"done": None}))
     },
@@ -192,6 +210,9 @@ gmc_args = AliasDict(
         # commit only aliases
         "-co": "co",
         "--commit-only": "co",
+        # store credentials aliases
+        "-sc": "sc",
+        "--store-credentials": "sc",
         # reference aliases
         "-r": "r",
         "--reference": "r",
