@@ -1,3 +1,5 @@
+import yaml
+
 class Task:
 
     def __init__(self, runnable, prio, *args):
@@ -39,6 +41,11 @@ class Help:
 
     def __repr__(self):
         return f"{self.description}\n\nOptions:\n{self.parse_options()}"
+
+    @staticmethod
+    def version():
+        with open("./config.yaml", "r") as config_file:
+            return yaml.safe_load(config_file)["version"]
 
     def parse_options(self):
         options = "    "  # start padding

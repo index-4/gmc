@@ -1,0 +1,5 @@
+# for now just stores version number and some metadata
+author: Korbinian Habereder (a.k.a SecretOne)
+co-authors:
+  - Jonas Fischer (a.k.a Yleisnero)
+version: v0.3.1
