@@ -26,10 +26,11 @@ flags = {}
 
 def display_help():
     help_message = Help(
-        "Welcome to gmc (Git magic commit)!\nThis is our git commit message formatter that helps us with taming the wild wild git commits.",
+        f"Welcome to gmc (Git magic commit)! {Help.version()}\nThis is our git commit message formatter that helps us with taming the wild wild git commits.",
         [
             (["h", "-h", "H", "--help"],
              "shows this message; what did you think it would do?"),
+            (["v", "-v", "V", "--version"], "shows gmc version"),
             (["s", "-s", "S", "--status"], "prints git status"),
             (["fe", "-fe", "--feature <feature_dec>"],
              "adds feature description to commit message; for more info about how to write descriptions see gmc confluence"),
@@ -174,6 +175,7 @@ def git_status():
 gmc_args = AliasDict(
     {
         "h": (False, 4, display_help),
+        "v": (False, 4, lambda: print(Help.version())),
         "p": (False, 0, git_push),
         "s": (False, 0, git_status),
         "a": (True, 2, git_magic_add),
@@ -190,6 +192,10 @@ gmc_args = AliasDict(
         "-h": "h",
         "H": "h",
         "--help": "h",
+        # version aliases
+        "-v": "v",
+        "V": "v",
+        "--version": "v",
         # push aliases
         "P": "p",
         "-p": "p",
