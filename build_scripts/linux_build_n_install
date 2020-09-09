@@ -1,5 +1,5 @@
 #!/bin/bash
 
-pyinstaller gmc_core.py --onefile -n gmc
+pyinstaller --clean gmc.spec
 cp dist/gmc /usr/local/bin
 echo "successfully installed new gmc version"
