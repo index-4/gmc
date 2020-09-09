@@ -1,3 +1,5 @@
+import os
+import sys
 import yaml
 
 class Task:
@@ -44,7 +46,7 @@ class Help:
 
     @staticmethod
     def version():
-        with open("./config.yaml", "r") as config_file:
+        with open(resource_path('config.yaml'), "r") as config_file:
             return yaml.safe_load(config_file)["version"]
 
     def parse_options(self):
@@ -61,3 +63,15 @@ class Help:
                 option_str += " " * (longest_option - len(option_str))  # add end padding
             options += option_str + f" : {option_n_desc[1]}\n    "
         return options
+
+
+# methods
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
