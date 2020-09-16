@@ -32,6 +32,7 @@ def display_help():
              "shows this message; what did you think it would do?"),
             (["v", "-v", "V", "--version"], "shows gmc version"),
             (["s", "-s", "S", "--status"], "prints git status"),
+            (["fs", "-fs", "--feature-start <feature_name>", "starts a new git flow feature"]),
             (["fe", "-fe", "--feature <feature_dec>"],
              "adds feature description to commit message; for more info about how to write descriptions see gmc confluence"),
             (["fi", "-fi", "--fix <fix_description>"],
@@ -104,6 +105,11 @@ def parse_feature(feature_message: str):
     os.system(f"git commit {message}")
     if finish_feature:
         os.system(f"git flow feature finish")
+
+
+def parse_feature_start(feature_name: str):
+    os.system(f"git flow feature start {feature_name}")
+    sys.exit(0)
 
 
 def parse_fix(fix_message: str):
@@ -182,6 +188,7 @@ gmc_args = AliasDict(
         "na": (False, 3, lambda: flags.update({"na": None})),
         "fi": (True, 1, parse_fix),
         "fe": (True, 1, parse_feature),
+        "fs": (True, 3, parse_feature_start),
         "co": (True, 1, parse_commit_only),
         "sc": (False, 0, parse_store_credentials),
         "r": (True, 2, lambda ref: flags.update({"ref": ref})),
@@ -213,6 +220,9 @@ gmc_args = AliasDict(
         # feature aliases
         "-fe": "fe",
         "--feature": "fe",
+        # feature start aliases
+        "-fs": "fs",
+        "--feature-start": "fs",
         # commit only aliases
         "-co": "co",
         "--commit-only": "co",
