@@ -32,11 +32,12 @@ def display_help():
              "shows this message; what did you think it would do?"),
             (["v", "-v", "V", "--version"], "shows gmc version"),
             (["s", "-s", "S", "--status"], "prints git status"),
-            (["fs", "-fs", "--feature-start <feature_name>", "starts a new git flow feature"]),
             (["fe", "-fe", "--feature <feature_dec>"],
              "adds feature description to commit message; for more info about how to write descriptions see gmc confluence"),
+            (["fs", "-fs", "--feature-start <feature_name>"], "starts a new git flow feature"),
             (["fi", "-fi", "--fix <fix_description>"],
              "adds fix description to commit message; for more info about how to write descriptions see gmc confluence"),
+            (["bs", "-bs", "--bugfix-start <bugfix_name>"], "starts a new git flow bugfix"),
             (["co", "-co", "--commit-only <commit_desc>"],
              "only stashes changes and adds commit message"),
             (["d", "-d", "--done"], "tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag"),
@@ -85,7 +86,7 @@ def check_flags(commit_message: str):
         commit_message += f'-m "changelog-relevant" '
         finish_flow = True
 
-    return finish_flow
+    return finish_flow, commit_message
 
 
 def parse_feature(feature_message: str):
@@ -100,7 +101,7 @@ def parse_feature(feature_message: str):
         feature_desc += f"{os.linesep}  - {change}"
     message += feature_desc + '" '  # end description
 
-    finish_feature = check_flags(message)
+    finish_feature, message = check_flags(message)
 
     os.system(f"git commit {message}")
     if finish_feature:
@@ -128,11 +129,16 @@ def parse_fix(fix_message: str):
         message += f'{os.linesep}    - {solution}'
     message += '" '  # end reasons and solutions
 
-    finish_bugfix = check_flags(message)
+    finish_bugfix, message = check_flags(message)
 
     os.system(f"git commit {message}")
     if finish_bugfix:
         os.system("git flow bugfix finish")
+
+
+def parse_fix_start(fix_name: str):
+    os.system(f"git flow bugfix start {fix_name}")
+    sys.exit(0)
 
 
 def parse_commit_only(commit_message: str):
@@ -189,6 +195,7 @@ gmc_args = AliasDict(
         "fi": (True, 1, parse_fix),
         "fe": (True, 1, parse_feature),
         "fs": (True, 3, parse_feature_start),
+        "bs": (True, 3, parse_fix_start),
         "co": (True, 1, parse_commit_only),
         "sc": (False, 0, parse_store_credentials),
         "r": (True, 2, lambda ref: flags.update({"ref": ref})),
@@ -217,6 +224,9 @@ gmc_args = AliasDict(
         # fix aliases
         "-fi": "fi",
         "--fix": "fi",
+        # fix start aliases
+        "-bs": "bs",
+        "--bugfix-start": "bs",
         # feature aliases
         "-fe": "fe",
         "--feature": "fe",
