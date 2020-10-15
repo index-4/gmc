@@ -164,7 +164,8 @@ def parse_commit_only(commit_message: str):
             commit_desc += f"{os.linesep}  - {change}"
         message += commit_desc + '" '  # end description
     else:  # omitted header
-        message = f'-m "- {changes[0]}'  # description
+        message = '-m "intermediate commit" '  # header
+        message += f'-m "- {changes[0]}'  # description
         for change in changes[1:]:
             message += f"{os.linesep}- {change}"
         message += '" '  # end description
