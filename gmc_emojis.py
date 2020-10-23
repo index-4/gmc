@@ -1,5 +1,3 @@
-def feature():
-    return ":sparkles:"
-
-def fix():
-    return ":bug:"
+class Emojis:
+    feature = ":sparkles:"
+    fix = ":bug:"

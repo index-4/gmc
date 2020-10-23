@@ -1,0 +1,17 @@
+# the editor you want to use as default when configuring gmc
+default_editor: nano
+
+# custom commands - design your gmc, your way!
+custom_commands:
+  - example:
+      args:
+        - e
+        - -e
+        - --example
+      # how high gmc should prioritize your command
+      priority: 0 # can be omitted -> defaults to 0
+      # wheter your command needs cli args
+      needs_args: false # can be omitted -> defaults to False
+      exec: "import json; print(json.loads('{\"hi\": \"am example\"}'))"
+      help: "Give a little help message to yourself :)" # can be omitted
+      show_in_help: false # can be omitted -> defaults to True

@@ -1,6 +1,6 @@
 import sys
 from gmc_arg_funcs import gmc_args, git_magic_add
-from gmc_helper_classes import *
+from gmc_helper_classes import Task, Batch
 
 
 # returns a list of runnable tasks

@@ -15,7 +15,10 @@ a = Analysis(['gmc_core.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
-a.datas += [("config.yaml", "config.yaml", "DATA")]
+a.datas += [
+    ("config.yaml", "config.yaml", "DATA"),
+    ("public_config.yaml", "public_config.yaml", "DATA")
+    ]
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
