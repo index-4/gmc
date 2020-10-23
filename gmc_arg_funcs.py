@@ -1,24 +1,8 @@
 import os
 import sys
-import gmc_emojis
-from gmc_helper_classes import Help
-
-
-class AliasDict(dict):
-
-    def __init__(self, *args, **kwargs):
-        dict.__init__(self, *args, **kwargs)
-        self.aliases = kwargs.get("aliases") if kwargs.get(
-            "aliases") is not None else {}
-
-    def __getitem__(self, key):
-        return dict.__getitem__(self, self.aliases.get(key, key))
-
-    def __setitem__(self, key, value):
-        return dict.__setitem__(self, self.aliases.get(key, key), value)
-
-    def add_alias(self, key, alias):
-        self.aliases[alias] = key
+from gmc_emojis import Emojis
+from gmc_helper_classes import Help, AliasDict
+from gmc_config import Config
 
 
 flags = {}
@@ -26,7 +10,7 @@ flags = {}
 
 def display_help():
     help_message = Help(
-        f"Welcome to gmc (Git magic commit)! {Help.version()}\nThis is our git commit message formatter that helps us with taming the wild wild git commits.",
+        f"Welcome to gmc (Git magic commit)! {Config().content['version']}\nThis is our git commit message formatter that helps us with taming the wild wild git commits.",
         [
             (["h", "-h", "H", "--help"],
              "shows this message; what did you think it would do?"),
@@ -34,19 +18,24 @@ def display_help():
             (["s", "-s", "S", "--status"], "prints git status"),
             (["fe", "-fe", "--feature <feature_dec>"],
              "adds feature description to commit message; for more info about how to write descriptions see gmc confluence"),
-            (["fs", "-fs", "--feature-start <feature_name>"], "starts a new git flow feature"),
+            (["fs", "-fs", "--feature-start <feature_name>"],
+             "starts a new git flow feature"),
             (["fi", "-fi", "--fix <fix_description>"],
              "adds fix description to commit message; for more info about how to write descriptions see gmc confluence"),
-            (["bs", "-bs", "--bugfix-start <bugfix_name>"], "starts a new git flow bugfix"),
+            (["bs", "-bs", "--bugfix-start <bugfix_name>"],
+             "starts a new git flow bugfix"),
             (["co", "-co", "--commit-only <commit_desc>"],
              "only stashes changes and adds commit message"),
             (["d", "-d", "--done"], "tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag"),
             (["r", "-r", "--reference <issue_id>"],
              "adds a reference to a GitHub or Jira issue"),
-            (["sc", "-sc", "--store-credentials"], "inits the git credential helper process for the local repository"),
+            (["sc", "-sc", "--store-credentials"],
+             "inits the git credential helper process for the local repository"),
             (["p", "-p", "P", "--push"], "tells gmc to push the current state"),
             (["na", "-na", "--no-add"],
-             "advises gmc to drop magic add (basically git add that searches for root git dir)")
+             "advises gmc to drop magic add (basically git add that searches for root git dir)"),
+            (["c", "-c", "--config", "--change-config"],
+             "change your gmc config in your preferred editor (per default nano)")
         ]
     )
     print(help_message)
@@ -95,7 +84,7 @@ def parse_feature(feature_message: str):
     changes = [change.strip() for change in changes.split("-")]
 
     # build commit message
-    message = f'-m "feature {feature_name} {gmc_emojis.feature()}" '  # header
+    message = f'-m "feature {feature_name} {Emojis.feature}" '  # header
     feature_desc = f'-m "  - {changes[0]}'  # description
     for change in changes[1:]:
         feature_desc += f"{os.linesep}  - {change}"
@@ -120,7 +109,7 @@ def parse_fix(fix_message: str):
     solutions = [solution.strip() for solution in solutions.split("-")]
 
     # build commit message
-    message = f'-m "fix for {fix_name} {gmc_emojis.fix()}" '  # header
+    message = f'-m "fix for {fix_name} {Emojis.fix}" '  # header
     message += f'-m "  reasons:'  # reasons (also opening quotes)
     for reason in reasons:
         message += f'{os.linesep}    - {reason}'
@@ -188,7 +177,7 @@ def git_status():
 gmc_args = AliasDict(
     {
         "h": (False, 4, display_help),
-        "v": (False, 4, lambda: print(Help.version())),
+        "v": (False, 4, lambda: print(Config().content["version"])),
         "p": (False, 0, git_push),
         "s": (False, 0, git_status),
         "a": (True, 2, git_magic_add),
@@ -200,7 +189,8 @@ gmc_args = AliasDict(
         "co": (True, 1, parse_commit_only),
         "sc": (False, 0, parse_store_credentials),
         "r": (True, 2, lambda ref: flags.update({"ref": ref})),
-        "d": (False, 2, lambda: flags.update({"done": None}))
+        "d": (False, 2, lambda: flags.update({"done": None})),
+        "c": (False, 0, lambda: Config().edit())
     },
     aliases={
         # help aliases
@@ -246,5 +236,9 @@ gmc_args = AliasDict(
         # done aliases
         "-d": "d",
         "--done": "d",
+        # config aliases
+        "-c": "c",
+        "--config": "c",
+        "--change-config": "c"
     }
 )
