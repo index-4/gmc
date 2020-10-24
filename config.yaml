@@ -2,6 +2,6 @@
 author: Korbinian Habereder (a.k.a SecretOne)
 co-authors:
   - Jonas Fischer (a.k.a Yleisnero)
-version: v0.4.0
+version: v0.4.1
 includes: 
   - public_config.yaml
