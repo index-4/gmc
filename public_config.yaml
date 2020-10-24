@@ -12,6 +12,6 @@ custom_commands:
       priority: 0 # can be omitted -> defaults to 0
       # wheter your command needs cli args
       needs_args: false # can be omitted -> defaults to False
-      exec: "import json; print(json.loads('{\"hi\": \"am example\"}'))"
+      exec: "print('henlo am example')"
       help: "Give a little help message to yourself :)" # can be omitted
       show_in_help: false # can be omitted -> defaults to True

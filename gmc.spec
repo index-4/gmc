@@ -6,7 +6,10 @@ block_cipher = None
 a = Analysis(['gmc_core.py'],
              pathex=['/home/secretone/git_repos/medicdat/gmc'],
              binaries=[],
-             datas=[],
+             datas=[
+               ("config.yaml", "."),
+               ("public_config.yaml", ".")
+             ],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -15,10 +18,6 @@ a = Analysis(['gmc_core.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
-a.datas += [
-    ("config.yaml", "config.yaml", "DATA"),
-    ("public_config.yaml", "public_config.yaml", "DATA")
-    ]
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,

@@ -1,5 +1,7 @@
 #!/bin/bash
 
 echo "building for linux"
+. venv/bin/activate
 pyinstaller --clean gmc.spec
+deactivate
 echo "successfully built for linux"
