@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. venv/bin/activate
 pyinstaller --clean gmc.spec
+deactivate
 cp dist/gmc /usr/local/bin
 echo "successfully installed new gmc version"

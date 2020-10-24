@@ -1,9 +1,6 @@
 import os
 import sys
 import yaml
-from yamlinclude import YamlIncludeConstructor
-
-YamlIncludeConstructor.add_to_loader_class(loader_class=yaml.FullLoader)
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -18,17 +15,14 @@ def resource_path(relative_path):
 
 class Config:
 
-    __instance = None
     content: dict = {}
-
-    def __new__(cls):
-        if Config.__instance is None:
-            Config.__instance = object.__new__(cls)
-        return Config.__instance
 
     def __init__(self):
         with open(resource_path('config.yaml'), "r") as config_file:
-            self.content = yaml.load(config_file, Loader=yaml.FullLoader)
+            self.content = yaml.safe_load(config_file)
+            for to_include in self.content["includes"]:
+                with open(resource_path(to_include)) as include_file:
+                    self.content.update({to_include.replace(".yaml", ""): yaml.safe_load(include_file)})
 
     def edit(self):
-        os.system(f"{self.content['public_config']['default_editor']} public_config.yaml")
+        os.system(f"{self.content['public_config']['default_editor']} {resource_path('public_config.yaml')}")

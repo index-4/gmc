@@ -1,5 +1,7 @@
 #!/bin/bash
 
 echo "building for windoofs"
+. venv/bin/activate
 wine ~/.wine/drive_c/users/secretone/Python38/Scripts/pyinstaller.exe --clean gmc.spec
+deactivate
 echo "successfully built for windoofs"
