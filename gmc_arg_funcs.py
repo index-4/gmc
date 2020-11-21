@@ -12,31 +12,58 @@ def display_help():
     help_message = Help(
         f"Welcome to gmc (Git magic commit)! {Config().content['version']}\nThis is our git commit message formatter that helps us with taming the wild wild git commits.",
         [
-            (["h", "-h", "H", "--help"],
-             "shows this message; what did you think it would do?"),
+            (
+                ["h", "-h", "H", "--help"],
+                "shows this message; what did you think it would do?",
+            ),
             (["v", "-v", "V", "--version"], "shows gmc version"),
             (["s", "-s", "S", "--status"], "prints git status"),
-            (["fe", "-fe", "--feature <feature_dec>"],
-             "adds feature description to commit message; for more info about how to write descriptions see gmc confluence"),
-            (["fs", "-fs", "--feature-start <feature_name>"],
-             "starts a new git flow feature"),
-            (["fi", "-fi", "--fix <fix_description>"],
-             "adds fix description to commit message; for more info about how to write descriptions see gmc confluence"),
-            (["bs", "-bs", "--bugfix-start <bugfix_name>"],
-             "starts a new git flow bugfix"),
-            (["co", "-co", "--commit-only <commit_desc>"],
-             "only stashes changes and adds commit message"),
-            (["d", "-d", "--done"], "tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag"),
-            (["r", "-r", "--reference <issue_id>"],
-             "adds a reference to a GitHub or Jira issue"),
-            (["sc", "-sc", "--store-credentials"],
-             "inits the git credential helper process for the local repository"),
+            (
+                ["fe", "-fe", "--feature <feature_dec>"],
+                "adds feature description to commit message; for more info about how to write descriptions see gmc confluence",
+            ),
+            (
+                ["fs", "-fs", "--feature-start <feature_name>"],
+                "starts a new git flow feature",
+            ),
+            (
+                ["fi", "-fi", "--fix <fix_description>"],
+                "adds fix description to commit message; for more info about how to write descriptions see gmc confluence",
+            ),
+            (
+                ["bs", "-bs", "--bugfix-start <bugfix_name>"],
+                "starts a new git flow bugfix",
+            ),
+            (
+                ["co", "-co", "--commit-only <commit_desc>"],
+                "only stashes changes and adds commit message",
+            ),
+            (
+                ["d", "-d", "--done"],
+                "tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag",
+            ),
+            (
+                ["r", "-r", "--reference <issue_id>"],
+                "adds a reference to a GitHub or Jira issue",
+            ),
+            (
+                ["sc", "-sc", "--store-credentials"],
+                "inits the git credential helper process for the local repository",
+            ),
+            (
+                ["i", "-i", "I", "--init"],
+                "inits from a fresh git repo and adds git flow structure",
+            ),
             (["p", "-p", "P", "--push"], "tells gmc to push the current state"),
-            (["na", "-na", "--no-add"],
-             "advises gmc to drop magic add (basically git add that searches for root git dir)"),
-            (["c", "-c", "--config", "--change-config"],
-             "change your gmc config in your preferred editor (per default nano)")
-        ]
+            (
+                ["na", "-na", "--no-add"],
+                "advises gmc to drop magic add (basically git add that searches for root git dir)",
+            ),
+            (
+                ["c", "-c", "--config", "--change-config"],
+                "change your gmc config in your preferred editor (per default nano)",
+            ),
+        ],
     )
     print(help_message)
     sys.exit(0)
@@ -112,10 +139,10 @@ def parse_fix(fix_message: str):
     message = f'-m "fix for {fix_name} {Emojis.fix}" '  # header
     message += f'-m "  reasons:'  # reasons (also opening quotes)
     for reason in reasons:
-        message += f'{os.linesep}    - {reason}'
-    message += f'{os.linesep}  solutions:'  # solutions
+        message += f"{os.linesep}    - {reason}"
+    message += f"{os.linesep}  solutions:"  # solutions
     for solution in solutions:
-        message += f'{os.linesep}    - {solution}'
+        message += f"{os.linesep}    - {solution}"
     message += '" '  # end reasons and solutions
 
     finish_bugfix, message = check_flags(message)
@@ -167,6 +194,21 @@ def parse_store_credentials():
     os.system("git push")
 
 
+def git_init(git_url: str):
+    print(f"creating git repo for {git_url}")
+    with open("README.md", "w") as readme:
+        readme.write(f"# {os.path.basename(os.getcwd())}")
+    os.system("git init")
+    git_magic_add(".")
+    parse_commit_only("initial_added README")
+    os.system("git branch -M master")
+    os.system(f"git remote add origin {git_url}")
+    os.system("git push -u origin master")
+    os.system("git flow init -d")
+    os.system("git checkout develop")
+    os.system("git push --set-upstream origin develop")
+
+
 # just in case ¯\_(ツ)_/¯
 def git_status():
     os.system("git status")
@@ -188,9 +230,10 @@ gmc_args = AliasDict(
         "bs": (True, 3, parse_fix_start),
         "co": (True, 1, parse_commit_only),
         "sc": (False, 0, parse_store_credentials),
+        "i": (True, 4, git_init),
         "r": (True, 2, lambda ref: flags.update({"ref": ref})),
         "d": (False, 2, lambda: flags.update({"done": None})),
-        "c": (False, 0, lambda: Config().edit())
+        "c": (False, 0, lambda: Config().edit()),
     },
     aliases={
         # help aliases
@@ -230,6 +273,10 @@ gmc_args = AliasDict(
         # store credentials aliases
         "-sc": "sc",
         "--store-credentials": "sc",
+        # init aliases
+        "-i": "i",
+        "I": "i",
+        "--init": "i",
         # reference aliases
         "-r": "r",
         "--reference": "r",
@@ -239,6 +286,6 @@ gmc_args = AliasDict(
         # config aliases
         "-c": "c",
         "--config": "c",
-        "--change-config": "c"
-    }
+        "--change-config": "c",
+    },
 )
