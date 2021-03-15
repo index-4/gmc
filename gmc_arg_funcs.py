@@ -168,6 +168,9 @@ def parse_commit_only(commit_message: str):
         # well looks like one omitted the heading :(
         changes = [change.strip() for change in commit_message.split("-")]
 
+    # remove empty changes
+    changes = [change for change in changes if change != ""]
+
     # admit that someone tried that
     if "done" in flags.keys() or "ref" in flags.keys():
         print("Nice try! Though you can't reference or end a flow in a commit only ;)")
