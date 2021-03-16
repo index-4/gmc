@@ -1,10 +1,10 @@
 ## building
-pyinstaller gmc_core.py --onefile -n gmc  
+pyinstaller --clean gmc.spec  
 
 ## linux
 cp dist/gmc /usr/local/bin
 
 ## win
 copy gmc.exe to a directory that is in your PATH:
-- user level -> most likely %appdata%/local/microsoft/windowsapps
+- user level -> most likely %appdata%/local/Microsoft/windowsapps
 - system wide -> %systemroot% ( needs admin rights )
