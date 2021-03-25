@@ -11,10 +11,13 @@ def parse_args() -> list:
         while arg := next(arg_iter):
             if (task := gmc_args[arg]) is not None:
                 if task[0]:  # command must have args (e.g. commit message)
-                    tasks.append(Task(task[2], task[1], next(arg_iter)))
+                    try:
+                        tasks.append(Task(task[2], task[1], next(arg_iter)))
+                    except StopIteration:  # needed args were not given
+                        raise Exception(f"Needed args for '{arg}' not given!")
                 else:
                     tasks.append(Task(task[2], task[1]))
-    except StopIteration:  # no more args to parse
+    except StopIteration:  # no more args overall to parse
         pass
     except KeyError as failed_key:
         print(f"Given argument {failed_key} does not exist!")
