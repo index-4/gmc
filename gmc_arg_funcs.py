@@ -205,7 +205,7 @@ def git_init(git_url: str):
         readme.write(f"# {os.path.basename(os.getcwd())}")
     os.system("git init")
     git_magic_add(".")
-    parse_commit_only("initial_added README")
+    parse_commit_only("initial commit_added README")
     os.system("git branch -M master")
     os.system(f"git remote add origin {git_url}")
     os.system("git push -u origin master")
