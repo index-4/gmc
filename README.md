@@ -11,7 +11,7 @@ Invoking the `gmc` command without any args results in a “git magic add”. Th
 ### Available commands
 
 ```
-h | -h | H | --help                           : shows this message; what did you think it would do?
+h | -h | H | --help                       : shows this message; what did you think it would do?
 v | -v | V | --version                    : shows gmcversion
 s | -s | S | --status                     : prints gitstatus
 fe | -fe | --feature <feature_dec>        : addsfeature description to commit message; for more infoabout how to write descriptions see gmc confluence
