@@ -51,7 +51,7 @@ def display_help():
                 "inits the git credential helper process for the local repository",
             ),
             (
-                ["i", "-i", "I", "--init"],
+                ["i", "-i", "I", "--init <git_repo_url>"],
                 "inits from a fresh git repo and adds git flow structure",
             ),
             (["p", "-p", "P", "--push"], "tells gmc to push the current state"),
