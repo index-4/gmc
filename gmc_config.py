@@ -1,6 +1,9 @@
 import os
 import sys
 import yaml
+import appdirs
+from shutil import copy2
+
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -18,11 +21,32 @@ class Config:
     content: dict = {}
 
     def __init__(self):
-        with open(resource_path('config.yaml'), "r") as config_file:
+        with open(resource_path("config.yaml"), "r") as config_file:
             self.content = yaml.safe_load(config_file)
+
+            if not os.path.exists(
+                appdirs.user_config_dir("gmc", "index4", roaming=True)
+            ):
+                # save config locally if is non existent
+                os.mkdir(appdirs.user_config_dir("gmc", "index4", roaming=True))
+                copy2(
+                    resource_path("public_config.yaml"),
+                    appdirs.user_config_dir("gmc", "index4", roaming=True),
+                )
             for to_include in self.content["includes"]:
-                with open(resource_path(to_include)) as include_file:
-                    self.content.update({to_include.replace(".yaml", ""): yaml.safe_load(include_file)})
+                with open(
+                    f"{appdirs.user_config_dir('gmc', 'index4', roaming=True)}/{to_include}",
+                    "r",
+                ) as local_config_file:
+                    self.content.update(
+                        {
+                            to_include.replace(".yaml", ""): yaml.safe_load(
+                                local_config_file
+                            )
+                        }
+                    )
 
     def edit(self):
-        os.system(f"{self.content['public_config']['default_editor']} {resource_path('public_config.yaml')}")
+        os.system(
+            f"{self.content['public_config']['default_editor']} {appdirs.user_config_dir('gmc', 'index4', roaming=True)}/public_config.yaml"
+        )
