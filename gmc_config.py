@@ -25,17 +25,17 @@ class Config:
             self.content = yaml.safe_load(config_file)
 
             if not os.path.exists(
-                appdirs.user_config_dir("gmc", "index4", roaming=True)
+                appdirs.user_config_dir("gmc", "index4")
             ):
                 # save config locally if is non existent
-                os.mkdir(appdirs.user_config_dir("gmc", "index4", roaming=True))
+                os.makedirs(appdirs.user_config_dir("gmc", "index4"))
                 copy2(
                     resource_path("public_config.yaml"),
-                    appdirs.user_config_dir("gmc", "index4", roaming=True),
+                    appdirs.user_config_dir("gmc", "index4"),
                 )
             for to_include in self.content["includes"]:
                 with open(
-                    f"{appdirs.user_config_dir('gmc', 'index4', roaming=True)}/{to_include}",
+                    f"{appdirs.user_config_dir('gmc', 'index4')}/{to_include}",
                     "r",
                 ) as local_config_file:
                     self.content.update(
@@ -48,5 +48,5 @@ class Config:
 
     def edit(self):
         os.system(
-            f"{self.content['public_config']['default_editor']} {appdirs.user_config_dir('gmc', 'index4', roaming=True)}/public_config.yaml"
+            f"{self.content['public_config']['default_editor']} {appdirs.user_config_dir('gmc', 'index4')}/public_config.yaml"
         )
