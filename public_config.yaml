@@ -1,5 +1,5 @@
 # the editor you want to use as default when configuring gmc
-default_editor: nano
+default_editor: code
 
 # custom commands - design your gmc, your way!
 custom_commands:
