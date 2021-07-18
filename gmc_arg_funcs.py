@@ -1,7 +1,5 @@
-import io
 import os
 import sys
-import subprocess
 from gmc_emojis import Emojis
 from gmc_helper_classes import Help, AliasDict
 from gmc_config import Config
@@ -128,6 +126,8 @@ def parse_feature(feature_message: str):
 
 def parse_feature_start(feature_name: str):
     os.system(f"git flow feature start {feature_name}")
+    parse_commit_only(f"initial commit for feature {feature_name}_")
+    os.system(f"git push --set-upstream origin feature/{feature_name}")
     sys.exit(0)
 
 
@@ -156,6 +156,8 @@ def parse_fix(fix_message: str):
 
 def parse_fix_start(fix_name: str):
     os.system(f"git flow bugfix start {fix_name}")
+    parse_commit_only(f"initial commit for fix {fix_name}_")
+    os.system(f"git push --set-upstream origin bugfix/{fix_name}")
     sys.exit(0)
 
 
@@ -193,10 +195,7 @@ def parse_commit_only(commit_message: str):
                 message += f"{os.linesep}- {change}"
             message += '" '  # end description
 
-    proc = subprocess.Popen(["gmc", f"commit {message}"], stdout=subprocess.PIPE)
-    sys.stdout.flush()
-    for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
-        print(f"dawjhdkawdkwa: {line}")
+    os.system(f"git commit {message}")
 
 
 def parse_store_credentials():
