@@ -1,11 +1,12 @@
+from gmc_config import Config
+
+# most important custom command imports (keep 'em)
 import os
 import sys
 import yaml
-from gmc_config import Config
 
 
 class Task:
-
     def __init__(self, runnable, prio, *args):
         self._runnable = runnable
         self.prio = prio
@@ -30,18 +31,17 @@ class Batch:
 
     def run(self):
         # sort by prio -> exec higher prioritised tasks first
-        self._tasks = sorted(
-            self._tasks, key=lambda task: task.prio, reverse=True)
+        self._tasks = sorted(self._tasks, key=lambda task: task.prio, reverse=True)
         for task in self._tasks:
             task.run()
 
 
 class AliasDict(dict):
-
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
-        self.aliases = kwargs.get("aliases") if kwargs.get(
-            "aliases") is not None else {}
+        self.aliases = (
+            kwargs.get("aliases") if kwargs.get("aliases") is not None else {}
+        )
         self.infuse_custom_commands()
 
     def __getitem__(self, key):
@@ -70,22 +70,22 @@ class AliasDict(dict):
 
             self.update(
                 {
-                    command[command_name]["args"][0]:
-                    (
+                    command[command_name]["args"][0]: (
                         needs_args,
                         priority,
-                        (lambda command=command[command_name]["exec"]: exec(command))
+                        (
+                            lambda call_args, command=command[command_name][
+                                "exec"
+                            ]: exec(command, None, {"call_args": call_args})
+                        ),
                     )
                 }
             )
             for arg in command[command_name]["args"][1:]:
-                self.add_alias(
-                    command[command_name]["args"][0],
-                    arg
-                )
+                self.add_alias(command[command_name]["args"][0], arg)
+
 
 class Help:
-
     def __init__(self, description: str, options_n_descs: list):
         """options should be a list of tuples; containing option (can also be list of options) and according description"""
         self.description = description
@@ -103,8 +103,9 @@ class Help:
                 show_command = command[command_name]["show_in_help"]
             except KeyError:
                 pass
-            
-            if not show_command: continue
+
+            if not show_command:
+                continue
             self.options_n_descs.append((command[command_name]["args"], help_msg))
 
     def __repr__(self):

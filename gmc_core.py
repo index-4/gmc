@@ -9,7 +9,7 @@ def parse_args() -> list:
     arg_iter = iter(sys.argv[1:])
     try:
         while arg := next(arg_iter):
-            if (task := gmc_args[arg]) is not None:
+            if task := gmc_args[arg]:
                 if task[0]:  # command must have args (e.g. commit message)
                     try:
                         tasks.append(Task(task[2], task[1], next(arg_iter)))
