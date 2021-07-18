@@ -2,6 +2,7 @@
 default_editor: code
 
 # custom commands - design your gmc, your way!
+# if you want to add args just use a f string and use {call_args} as placeholder
 custom_commands:
   - example:
       args:
