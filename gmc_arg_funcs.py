@@ -126,6 +126,8 @@ def parse_feature(feature_message: str):
 
 def parse_feature_start(feature_name: str):
     os.system(f"git flow feature start {feature_name}")
+    parse_commit_only(f"initial commit for feature {feature_name}_")
+    os.system(f"git push --set-upstream origin feature/{feature_name}")
     sys.exit(0)
 
 
@@ -154,6 +156,8 @@ def parse_fix(fix_message: str):
 
 def parse_fix_start(fix_name: str):
     os.system(f"git flow bugfix start {fix_name}")
+    parse_commit_only(f"initial commit for fix {fix_name}_")
+    os.system(f"git push --set-upstream origin bugfix/{fix_name}")
     sys.exit(0)
 
 

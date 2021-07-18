@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['gmc_core.py'],
-             pathex=['/home/secretone/git_repos/medicdat/gmc'],
+             pathex=['/home/secretone/git_repos/index/gmc'],
              binaries=[],
              datas=[
                ("config.yaml", "."),
