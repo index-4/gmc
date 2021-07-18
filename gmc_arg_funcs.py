@@ -191,7 +191,7 @@ def parse_commit_only(commit_message: str):
                 message += f"{os.linesep}- {change}"
             message += '" '  # end description
 
-    os.system(f"git commit {message}")
+    print(os.system(f"git commit {message}"))
 
 
 def parse_store_credentials():
