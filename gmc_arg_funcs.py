@@ -1,5 +1,7 @@
+import io
 import os
 import sys
+import subprocess
 from gmc_emojis import Emojis
 from gmc_helper_classes import Help, AliasDict
 from gmc_config import Config
@@ -191,7 +193,10 @@ def parse_commit_only(commit_message: str):
                 message += f"{os.linesep}- {change}"
             message += '" '  # end description
 
-    print(os.system(f"git commit {message}"))
+    proc = subprocess.Popen(["gmc", f"commit {message}"], stdout=subprocess.PIPE)
+    sys.stdout.flush()
+    for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
+        print(f"dawjhdkawdkwa: {line}")
 
 
 def parse_store_credentials():
