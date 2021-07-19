@@ -12,7 +12,7 @@ custom_commands:
       # how high gmc should prioritize your command
       priority: 0 # can be omitted -> defaults to 0
       # wheter your command needs cli args
-      needs_args: false # can be omitted -> defaults to False
+      needs_args: 0 # can be omitted -> defaults to 0 (must be in range [0,2] -> [no, yes, optional])
       exec: "print('henlo am example')"
       help: "Give a little help message to yourself :)" # can be omitted
       show_in_help: false # can be omitted -> defaults to True

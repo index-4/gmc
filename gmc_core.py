@@ -14,7 +14,10 @@ def parse_args() -> list:
                     try:
                         tasks.append(Task(task[2], task[1], next(arg_iter)))
                     except StopIteration:  # needed args were not given
-                        raise Exception(f"Needed args for '{arg}' not given!")
+                        if task[0] == 1:
+                            raise Exception(f"Needed args for '{arg}' not given!")
+                        else:
+                            tasks.append(Task(task[2], task[1], "$d34d$"))
                 else:
                     tasks.append(Task(task[2], task[1]))
     except StopIteration:  # no more args overall to parse

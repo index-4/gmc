@@ -13,8 +13,11 @@ class Task:
         self._args = " ".join(args) if len(args) != 0 else None
 
     def run(self):
-        if self._args is not None:
-            self._runnable(self._args)
+        if self._args:
+            if "$d34d$" in self._args:
+                self._runnable("")
+            else:
+                self._runnable(self._args)
         else:
             self._runnable()
 
@@ -56,11 +59,15 @@ class AliasDict(dict):
     def infuse_custom_commands(self):
         for command in Config().content["public_config"]["custom_commands"]:
             command_name = list(command.keys())[0]
-            needs_args = False
+            needs_args = 0
             priority = 0
 
             try:
                 needs_args = command[command_name]["needs_args"]
+                if needs_args < 0 or needs_args > 2:
+                    raise ValueError(
+                        f"Needs args must be in [0,2]; check your config for command '{command_name}'"
+                    )
             except KeyError:
                 pass
             try:
