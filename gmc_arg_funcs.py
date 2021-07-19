@@ -132,6 +132,7 @@ def parse_feature_start(feature_name: str):
 
 
 def parse_fix(fix_message: str):
+    print(fix_message)
     finish_bugfix = False
     fix_name, reasons, solutions = fix_message.split("_")
     reasons = [reason.strip() for reason in reasons.split("-")]
@@ -224,25 +225,26 @@ def git_status():
 
 
 # stores functions that shall be executed by gmc; format (needs_args, prio, function)
+# needs_args: in range [0,2] -> [no, yes, optional]
 # prios (from high to low): 4 3 [2] 1 0; 2 is default
 gmc_args = AliasDict(
     {
-        "h": (False, 4, display_help),
-        "v": (False, 4, lambda: print(Config().content["version"])),
-        "p": (False, 0, git_push),
-        "s": (False, 0, git_status),
-        "a": (True, 2, git_magic_add),
-        "na": (False, 3, lambda: flags.update({"na": None})),
-        "fi": (True, 1, parse_fix),
-        "fe": (True, 1, parse_feature),
-        "fs": (True, 3, parse_feature_start),
-        "bs": (True, 3, parse_fix_start),
-        "co": (True, 1, parse_commit_only),
-        "sc": (False, 0, parse_store_credentials),
-        "i": (True, 4, git_init),
-        "r": (True, 2, lambda ref: flags.update({"ref": ref})),
-        "d": (False, 2, lambda: flags.update({"done": None})),
-        "c": (False, 0, lambda: Config().edit()),
+        "h": (0, 4, display_help),
+        "v": (0, 4, lambda: print(Config().content["version"])),
+        "p": (0, 0, git_push),
+        "s": (0, 0, git_status),
+        "a": (0, 2, git_magic_add),
+        "na": (0, 3, lambda: flags.update({"na": None})),
+        "fi": (1, 1, parse_fix),
+        "fe": (1, 1, parse_feature),
+        "fs": (1, 3, parse_feature_start),
+        "bs": (1, 3, parse_fix_start),
+        "co": (1, 1, parse_commit_only),
+        "sc": (0, 0, parse_store_credentials),
+        "i": (1, 4, git_init),
+        "r": (1, 2, lambda ref: flags.update({"ref": ref})),
+        "d": (0, 2, lambda: flags.update({"done": None})),
+        "c": (0, 0, lambda: Config().edit()),
     },
     aliases={
         # help aliases
