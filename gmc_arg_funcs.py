@@ -3,6 +3,7 @@ import sys
 from gmc_emojis import Emojis
 from gmc_helper_classes import Help, AliasDict
 from gmc_config import Config
+import urllib.request
 
 
 flags = {}
@@ -10,7 +11,7 @@ flags = {}
 
 def display_help():
     help_message = Help(
-        f"Welcome to gmc (Git magic commit)! {Config().content['version']}\nThis is our git commit message formatter that helps us with taming the wild wild git commits.",
+        f"Welcome to gmc (Git magic commit)! {Config().content['version']}\nThis is a git commit message formatter that helps with taming the wild wild git commits.",
         [
             (
                 ["h", "-h", "H", "--help"],
@@ -47,6 +48,10 @@ def display_help():
                 "adds a reference to a GitHub or Jira issue",
             ),
             (
+                ["!r", "-!r", "--random"],
+                "push to origin with a random commit message from whatthecommit.com",
+            ),
+            (
                 ["sc", "-sc", "--store-credentials"],
                 "inits the git credential helper process for the local repository",
             ),
@@ -55,6 +60,7 @@ def display_help():
                 "inits from a fresh git repo and adds git flow structure",
             ),
             (["p", "-p", "P", "--push"], "tells gmc to push the current state"),
+            (["!p", "-!p", "!P", "--pull"], "tells gmc to pull from origin"),
             (
                 ["na", "-na", "--no-add"],
                 "advises gmc to drop magic add (basically git add that searches for root git dir)",
@@ -62,6 +68,10 @@ def display_help():
             (
                 ["c", "-c", "--config", "--change-config"],
                 "change your gmc config in your preferred editor (per default nano)",
+            ),
+            (
+                ["m", "-m", "--multi-pull"],
+                "Pull multiple repositories, in the current directory, at once",
             ),
         ],
     )
@@ -72,6 +82,11 @@ def display_help():
 def git_push():
     print("Pushing to origin")
     os.system("git push")
+
+
+def git_pull():
+    print("Pulling from origin")
+    os.system("git pull")
 
 
 def git_magic_add(target_directory: str = None):
@@ -224,6 +239,16 @@ def git_status():
     os.system("git status")
 
 
+def multi_pull():
+    os.system("find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} pull \\;")
+
+
+def git_random_commit():
+    quote = urllib.request.urlopen("http://whatthecommit.com/index.txt").read().decode() + "_"
+    git_magic_add()
+    parse_commit_only(quote)
+
+
 # stores functions that shall be executed by gmc; format (needs_args, prio, function)
 # needs_args: in range [0,2] -> [no, yes, optional]
 # prios (from high to low): 4 3 [2] 1 0; 2 is default
@@ -232,6 +257,7 @@ gmc_args = AliasDict(
         "h": (0, 4, display_help),
         "v": (0, 4, lambda: print(Config().content["version"])),
         "p": (0, 0, git_push),
+        "!p": (0, 0, git_pull),
         "s": (0, 0, git_status),
         "a": (0, 2, git_magic_add),
         "na": (0, 3, lambda: flags.update({"na": None})),
@@ -243,8 +269,10 @@ gmc_args = AliasDict(
         "sc": (0, 0, parse_store_credentials),
         "i": (1, 4, git_init),
         "r": (1, 2, lambda ref: flags.update({"ref": ref})),
+        "!r": (0, 0, git_random_commit),
         "d": (0, 2, lambda: flags.update({"done": None})),
         "c": (0, 0, lambda: Config().edit()),
+        "m": (0, 0, multi_pull),
     },
     aliases={
         # help aliases
@@ -259,6 +287,10 @@ gmc_args = AliasDict(
         "P": "p",
         "-p": "p",
         "--push": "p",
+        # pull aliases
+        "!P": "!p",
+        "-!p": "!p",
+        "--pull": "!p",
         # no add aliases
         "-na": "na",
         "--no-add": "na",
@@ -291,6 +323,9 @@ gmc_args = AliasDict(
         # reference aliases
         "-r": "r",
         "--reference": "r",
+        # random aliases
+        "-!r": "!r",
+        "--random": "!r",
         # done aliases
         "-d": "d",
         "--done": "d",
@@ -298,5 +333,8 @@ gmc_args = AliasDict(
         "-c": "c",
         "--config": "c",
         "--change-config": "c",
+        # multi-pull aliases
+        "-m": "m",
+        "--multi-pull": "m",
     },
 )

@@ -1,4 +1,5 @@
 from gmc_config import Config
+from art import text2art
 
 # most important custom command imports (keep 'em)
 import os
@@ -116,7 +117,7 @@ class Help:
             self.options_n_descs.append((command[command_name]["args"], help_msg))
 
     def __repr__(self):
-        return f"{self.description}\n\nOptions:\n{self.parse_options()}"
+        return f"{text2art('gmc')}\n{self.description}\n\nOptions:\n{self.parse_options()}"
 
     def parse_options(self):
         options = "    "  # start padding
