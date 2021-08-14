@@ -31,7 +31,6 @@ def parse_args() -> list:
     # explicitly add magic add to tasks, if not single command or gmc only
     if len(sys.argv) != 2:
         tasks.insert(0, Task(git_magic_add, 2))
-    print(tasks)
     return tasks
 
 

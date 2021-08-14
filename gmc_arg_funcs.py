@@ -216,7 +216,7 @@ def parse_commit_only(commit_message: str):
 
 def parse_store_credentials():
     os.system("git config credential.helper store")
-    os.system("git push")
+    os.system("git pull")
 
 
 def git_init(git_url: str):
@@ -247,6 +247,7 @@ def git_random_commit():
     quote = urllib.request.urlopen("http://whatthecommit.com/index.txt").read().decode() + "_"
     git_magic_add()
     parse_commit_only(quote)
+    os.system("git push")
 
 
 # stores functions that shall be executed by gmc; format (needs_args, prio, function)
