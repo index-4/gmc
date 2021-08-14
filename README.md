@@ -14,18 +14,23 @@ Invoking the `gmc` command without any args results in a “git magic add”. Th
 h | -h | H | --help                       : shows this message; what did you think it would do?
 v | -v | V | --version                    : shows gmc version
 s | -s | S | --status                     : prints git status
-fe | -fe | --feature <feature_dec>        : addsfeature description to commit message; for more info about how to write descriptions see gmc confluence
+fe | -fe | --feature <feature_dec>        : adds feature description to commit message; for more info about how to write descriptions see gmc confluence
 fs | -fs | --feature-start <feature_name> : starts a new git flow feature
 fi | -fi | --fix <fix_description>        : adds fix description to commit message; for more info about how to write descriptions see gmc confluence
 bs | -bs | --bugfix-start <bugfix_name>   : starts a new git flow bugfix
 co | -co | --commit-only <commit_desc>    : only stashes changes and adds commit message
 d | -d | --done                           : tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag
 r | -r | --reference <issue_id>           : adds a reference to a GitHub or Jira issue
+!r | -!r | --random                       : push to origin with a random commit message from whatthecommit.com
 sc | -sc | --store-credentials            : inits the git credential helper process for the local repository
 i | -i | I | --init <git_repo_url>        : inits from a fresh git repo and adds git flow structure
 p | -p | P | --push                       : tells gmc to push the current state
+!p | -!p | !P | --pull                    : tells gmc to pull from origin
 na | -na | --no-add                       : advises gmc to drop magic add (basically git add that searches for root git dir)
 c | -c | --config | --change-config       : change your gmc config in your preferred editor (per default nano)
+m | -m | --multi-pull                     : Pull multiple repositories, in the current directory, at once
+b | -b | --branch                         : Prints `git branch` output
+ch | -ch | --checkout                     : Short version of `git checkout`
 ```
 
 ### Argument format
