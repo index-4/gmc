@@ -82,7 +82,7 @@ class AliasDict(dict):
                         needs_args,
                         priority,
                         (
-                            lambda call_args, command=command[command_name][
+                            lambda call_args=None, command=command[command_name][
                                 "exec"
                             ]: exec(command, None, {"call_args": call_args})
                         ),
