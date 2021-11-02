@@ -192,7 +192,7 @@ def parse_commit_only(commit_message: str):
     changes = [change for change in changes if change != ""]
 
     # admit that someone tried that
-    if "done" in flags.keys() or "ref" in flags.keys():
+    if "done" in flags.keys():
         print("Nice try! Though you can't reference or end a flow in a commit only ;)")
 
     # build commit message
@@ -210,6 +210,8 @@ def parse_commit_only(commit_message: str):
             for change in changes[1:]:
                 message += f"{os.linesep}- {change}"
             message += '" '  # end description
+
+    _, message = check_flags(message)
 
     os.system(f"git commit {message}")
 
