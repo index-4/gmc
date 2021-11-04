@@ -1,0 +1,3 @@
+appdirs==1.4.4
+art==5.3
+PyYAML==6.0
