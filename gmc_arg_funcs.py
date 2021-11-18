@@ -1,9 +1,10 @@
 import os
 import sys
 from gmc_emojis import Emojis
-from gmc_helper_classes import Help, AliasDict
+from gmc_helper_classes import Help, AliasDict, TestMappings
 from gmc_config import Config
 import urllib.request
+from time import sleep
 
 
 flags = {}
@@ -42,6 +43,10 @@ def display_help():
             (
                 ["d", "-d", "--done"],
                 "tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag",
+            ),
+            (
+                ["t", "-t", "--test <test_command>"],
+                "instructs gmc to test your code befor pushing; either tests via given command or from test mapping in config",
             ),
             (
                 ["r", "-r", "--reference <issue_id>"],
@@ -120,6 +125,24 @@ def check_flags(commit_message: str):
     return finish_flow, commit_message
 
 
+def execute_tests():
+    if "test" in flags.keys():
+        if flags["test"]:
+            os.system(flags["test"])
+        else:
+            try:
+                os.system(TestMappings().mappings[os.getcwd()])
+            except KeyError:
+                print("Directory is not mapped for tests in config and no test command was given!")
+                sys.exit(404)
+        print("Tests finished if you wanna abort the commit (CTRL + C) due to failed tests I'll give you 5 seconds...")
+        try:
+            sleep(5)
+        except KeyboardInterrupt:
+            print("Aborting commit due to failed tests")
+            sys.exit(0)
+
+
 def parse_feature(feature_message: str):
     finish_feature = False
     feature_name, changes = feature_message.split("_")
@@ -133,6 +156,8 @@ def parse_feature(feature_message: str):
     message += feature_desc + '" '  # end description
 
     finish_feature, message = check_flags(message)
+
+    execute_tests()
 
     os.system(f"git commit {message}")
     if finish_feature:
@@ -164,6 +189,8 @@ def parse_fix(fix_message: str):
     message += '" '  # end reasons and solutions
 
     finish_bugfix, message = check_flags(message)
+
+    execute_tests()
 
     os.system(f"git commit {message}")
     if finish_bugfix:
@@ -212,6 +239,8 @@ def parse_commit_only(commit_message: str):
             message += '" '  # end description
 
     _, message = check_flags(message)
+
+    execute_tests()
 
     os.system(f"git commit {message}")
 
@@ -271,6 +300,7 @@ gmc_args = AliasDict(
         "co": (1, 1, parse_commit_only),
         "sc": (0, 0, parse_store_credentials),
         "i": (1, 4, git_init),
+        "t": (2, 2, lambda command=None: flags.update({"test": command})),
         "r": (1, 2, lambda ref: flags.update({"ref": ref})),
         "!r": (0, 0, git_random_commit),
         "d": (0, 2, lambda: flags.update({"done": None})),
@@ -323,6 +353,9 @@ gmc_args = AliasDict(
         "-i": "i",
         "I": "i",
         "--init": "i",
+        # test aliases
+        "-t": "t",
+        "--test": "t",
         # reference aliases
         "-r": "r",
         "--reference": "r",

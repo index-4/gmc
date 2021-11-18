@@ -57,6 +57,9 @@ class AliasDict(dict):
     def add_alias(self, key, alias):
         self.aliases[alias] = key
 
+    def is_key_known(self, key: str):
+        return key in self.aliases.keys() or key in self.keys()
+
     def infuse_custom_commands(self):
         for command in Config().content["public_config"]["custom_commands"]:
             command_name = list(command.keys())[0]
@@ -93,6 +96,15 @@ class AliasDict(dict):
                 self.add_alias(command[command_name]["args"][0], arg)
 
 
+class TestMappings:
+
+    mappings = {}
+
+    def __init__(self):
+        for mapping in Config().content["public_config"]["test_mappings"]:
+            self.mappings.update(mapping)
+
+
 class Help:
     def __init__(self, description: str, options_n_descs: list):
         """options should be a list of tuples; containing option (can also be list of options) and according description"""
@@ -117,7 +129,9 @@ class Help:
             self.options_n_descs.append((command[command_name]["args"], help_msg))
 
     def __repr__(self):
-        return f"{text2art('gmc')}\n{self.description}\n\nOptions:\n{self.parse_options()}"
+        return (
+            f"{text2art('gmc')}\n{self.description}\n\nOptions:\n{self.parse_options()}"
+        )
 
     def parse_options(self):
         options = "    "  # start padding

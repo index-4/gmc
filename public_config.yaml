@@ -16,3 +16,7 @@ custom_commands:
       exec: "print('henlo am example')"
       help: "Give a little help message to yourself :)" # can be omitted
       show_in_help: false # can be omitted -> defaults to True
+
+# map a cwd to a test command
+test_mappings:
+  - "/home/secretone/git_repos/...": "yarn test"
