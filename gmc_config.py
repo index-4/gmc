@@ -6,7 +6,7 @@ from shutil import copy2
 
 
 def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
+    """Get absolute path to resource, works for dev and for PyInstaller"""
     try:
         # PyInstaller creates a temp folder and stores its' path in _MEIPASS
         base_path = sys._MEIPASS
@@ -24,9 +24,7 @@ class Config:
         with open(resource_path("config.yaml"), "r") as config_file:
             self.content = yaml.safe_load(config_file)
 
-            if not os.path.exists(
-                appdirs.user_config_dir("gmc", "index4")
-            ):
+            if not os.path.exists(appdirs.user_config_dir("gmc", "index4")):
                 # save config locally if is non existent
                 os.makedirs(appdirs.user_config_dir("gmc", "index4"))
                 copy2(
@@ -37,14 +35,22 @@ class Config:
                 with open(
                     f"{appdirs.user_config_dir('gmc', 'index4')}/{to_include}",
                     "r",
-                ) as local_config_file:
+                ) as global_config_file:
                     self.content.update(
                         {
                             to_include.replace(".yaml", ""): yaml.safe_load(
-                                local_config_file
+                                global_config_file
                             )
                         }
                     )
+            try:
+                with open(".gmc", "r") as local_config:
+                    local_content = yaml.safe_load(local_config)
+                    for key in self.content["public_config"].keys():
+                        if key in local_content:
+                            self.content["public_config"][key] = local_content[key]
+            except:
+                pass  # swallow if no local config
 
     def edit(self):
         os.system(
