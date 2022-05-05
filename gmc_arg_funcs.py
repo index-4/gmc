@@ -220,7 +220,7 @@ def parse_commit_only(commit_message: str):
 
     # admit that someone tried that
     if "done" in flags.keys():
-        print("Nice try! Though you can't reference or end a flow in a commit only ;)")
+        print("Nice try! Though you can't end a flow in a commit only ;)")
 
     # build commit message
     if commit_name is not None:
