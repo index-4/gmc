@@ -161,7 +161,10 @@ def parse_feature(feature_message: str):
 
     os.system(f"git commit {message}")
     if finish_feature:
-        os.system(f"gh pr create")
+        if Config.content["default_git_handler"] == "git":
+            os.system(f"gh pr create")
+        else:
+            os.system(f"git pr create --target-branch develop")
 
 
 def parse_feature_start(feature_name: str):
@@ -194,7 +197,10 @@ def parse_fix(fix_message: str):
 
     os.system(f"git commit {message}")
     if finish_bugfix:
-        os.system("gh pr create")
+        if Config.content["default_git_handler"] == "git":
+            os.system(f"gh pr create")
+        else:
+            os.system(f"git pr create --target-branch develop")
 
 
 def parse_fix_start(fix_name: str):
