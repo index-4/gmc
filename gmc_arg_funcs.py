@@ -161,8 +161,8 @@ def parse_feature(feature_message: str):
 
     os.system(f"git commit {message}")
     if finish_feature:
-        print(Config.content)
-        if Config.content["default_git_handler"] == "git":
+        print(Config().content)
+        if Config().content["default_git_handler"] == "git":
             os.system(f"gh pr create")
         else:
             os.system(f"git pr create --target-branch develop")
@@ -198,7 +198,7 @@ def parse_fix(fix_message: str):
 
     os.system(f"git commit {message}")
     if finish_bugfix:
-        if Config.content["default_git_handler"] == "git":
+        if Config().content["default_git_handler"] == "git":
             os.system(f"gh pr create")
         else:
             os.system(f"git pr create --target-branch develop")
