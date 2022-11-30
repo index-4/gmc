@@ -200,7 +200,7 @@ def parse_fix(fix_message: str):
         if Config().content["public_config"]["default_git_handler"] == "git":
             os.system(f"gh pr create")
         else:
-            os.system(f"git pr create --target-branch develop")
+            os.system(f"git pr create --target-branch develop --project {os.getcwd()}")
 
 
 def parse_fix_start(fix_name: str):
