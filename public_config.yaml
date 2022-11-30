@@ -1,6 +1,9 @@
 # the editor you want to use as default when configuring gmc
 default_editor: code
 
+# can be git or azure
+default_git_handler: git
+
 # custom commands - design your gmc, your way!
 # if you want to add args just use a f string and use {call_args} as placeholder
 custom_commands:

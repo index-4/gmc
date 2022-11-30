@@ -161,7 +161,10 @@ def parse_feature(feature_message: str):
 
     os.system(f"git commit {message}")
     if finish_feature:
-        os.system(f"git flow feature finish")
+        if Config().content["public_config"]["default_git_handler"] == "git":
+            os.system(f"gh pr create")
+        else:
+            os.system(f"git pr create --target-branch develop --project {os.getcwd()}")
 
 
 def parse_feature_start(feature_name: str):
@@ -194,7 +197,10 @@ def parse_fix(fix_message: str):
 
     os.system(f"git commit {message}")
     if finish_bugfix:
-        os.system("git flow bugfix finish")
+        if Config().content["public_config"]["default_git_handler"] == "git":
+            os.system(f"gh pr create")
+        else:
+            os.system(f"git pr create --target-branch develop")
 
 
 def parse_fix_start(fix_name: str):
@@ -220,7 +226,7 @@ def parse_commit_only(commit_message: str):
 
     # admit that someone tried that
     if "done" in flags.keys():
-        print("Nice try! Though you can't reference or end a flow in a commit only ;)")
+        print("Nice try! Though you can't end a flow in a commit only ;)")
 
     # build commit message
     if commit_name is not None:
