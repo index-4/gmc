@@ -161,7 +161,7 @@ def parse_feature(feature_message: str):
 
     os.system(f"git commit {message}")
     if finish_feature:
-        os.system(f"git flow feature finish")
+        os.system(f"gh pr create")
 
 
 def parse_feature_start(feature_name: str):
@@ -194,7 +194,7 @@ def parse_fix(fix_message: str):
 
     os.system(f"git commit {message}")
     if finish_bugfix:
-        os.system("git flow bugfix finish")
+        os.system("gh pr create")
 
 
 def parse_fix_start(fix_name: str):
