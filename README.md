@@ -36,7 +36,7 @@ ch | -ch | --checkout                     : Short version of `git checkout`
 ### Argument format
 | argument | format | tips |  
 | ------------- | -------------| --- |  
-| fe | “heading(commit name)_desc1-desc2-desc3(describe here what you changed for the feature; descriptions are separated by ‘-'; leading and trailing white spaces get trimmed; if you need ‘-’ or '_’ in your commit message use camel case instead)” |
-| fi | “heading(commit name)_reason1-reason2(list here the reasons for the bug; reasons are separated by ‘-'; leading and trailing white spaces get trimmed)_solution1-solution2(list here the solutions that fixed the bug reasons; reasons are separated by '-'; leading and trailing white spaces get trimmed; if you need '-’ or '_’ in your commit message use camel case instead)” |
+| fe | “heading(commit name)~scope_desc1-desc2-desc3(describe here what you changed for the feature; descriptions are separated by ‘-'; leading and trailing white spaces get trimmed; if you need ‘-’ or '_’ in your commit message use camel case instead)” |
+| fi | “heading(commit name)~scope_reason1-reason2(list here the reasons for the bug; reasons are separated by ‘-'; leading and trailing white spaces get trimmed)_solution1-solution2(list here the solutions that fixed the bug reasons; reasons are separated by '-'; leading and trailing white spaces get trimmed; if you need '-’ or '_’ in your commit message use camel case instead)” |
 | co | “heading_desc1-desc2-…” | heading and _ can be omitted. But be warned: “_” and “-” still get parsed. |
 | r | “#1(GitHub issue number or Jira issue id)” | |
