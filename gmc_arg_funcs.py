@@ -7,7 +7,7 @@ import urllib.request
 from time import sleep
 
 
-flags = {}
+flags: dict[str, str] = {}
 
 
 def display_help():
@@ -146,10 +146,15 @@ def execute_tests():
 def parse_feature(feature_message: str):
     finish_feature = False
     feature_name, changes = feature_message.split("_")
+    scope = None
+    try:
+        feature_name, scope = feature_name.split("~")
+    except ValueError:
+        pass # swallow if no scope
     changes = [change.strip() for change in changes.split("-")]
 
     # build commit message
-    message = f'-m "feat: {feature_name} {Emojis.feature}" '  # header
+    message = f'-m "feat{f"({scope})" if scope else ""}: {feature_name} {Emojis.feature}" '  # header
     feature_desc = f'-m "  - {changes[0]}'  # description
     for change in changes[1:]:
         feature_desc += f"{os.linesep}  - {change}"
@@ -166,7 +171,10 @@ def parse_feature(feature_message: str):
         else:
             project_name = Config().content["public_config"]["azure_project"]
             repo_name = os.getcwd().split("/")[-1]
-            os.system(f"git pr create --target-branch develop --project {project_name} --repository {repo_name}")
+            work_items = ""
+            if "ref" in flags.keys():
+                work_items = f"--work-items {flags['ref'].replace('#', '')}"
+            os.system(f"git pr create --target-branch develop --project {project_name} --repository {repo_name} {work_items} --squash true --description {message.replace('-m ', '')}")
 
 
 def parse_feature_start(feature_name: str):
@@ -180,11 +188,16 @@ def parse_fix(fix_message: str):
     print(fix_message)
     finish_bugfix = False
     fix_name, reasons, solutions = fix_message.split("_")
+    scope = None
+    try:
+        fix_name, scope = fix_name.split("~")
+    except ValueError:
+        pass # swallow if no scope
     reasons = [reason.strip() for reason in reasons.split("-")]
     solutions = [solution.strip() for solution in solutions.split("-")]
 
     # build commit message
-    message = f'-m "fix: {fix_name} {Emojis.fix}" '  # header
+    message = f'-m "fix{f"({scope})" if scope else ""}: {fix_name} {Emojis.fix}" '  # header
     message += f'-m "  reasons:'  # reasons (also opening quotes)
     for reason in reasons:
         message += f"{os.linesep}    - {reason}"
@@ -204,7 +217,10 @@ def parse_fix(fix_message: str):
         else:
             project_name = Config().content["public_config"]["azure_project"]
             repo_name = os.getcwd().split("/")[-1]
-            os.system(f"git pr create --target-branch develop --project {project_name} --repository {repo_name}")
+            work_items = ""
+            if "ref" in flags.keys():
+                work_items = f"--work-items {flags['ref'].replace('#', '')}"
+            os.system(f"git pr create --target-branch develop --project {project_name} --repository {repo_name} {work_items} --squash true --description {message.replace('-m ', '')}")
 
 
 def parse_fix_start(fix_name: str):
