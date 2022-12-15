@@ -40,3 +40,10 @@ ch | -ch | --checkout                     : Short version of `git checkout`
 | fi | “heading(commit name)~scope_reason1-reason2(list here the reasons for the bug; reasons are separated by ‘-'; leading and trailing white spaces get trimmed)_solution1-solution2(list here the solutions that fixed the bug reasons; reasons are separated by '-'; leading and trailing white spaces get trimmed; if you need '-’ or '_’ in your commit message use camel case instead)” |
 | co | “heading_desc1-desc2-…” | heading and _ can be omitted. But be warned: “_” and “-” still get parsed. |
 | r | “#1(GitHub issue number or Jira issue id)” | |
+
+### azure configuration
+1. [install](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt) azure cli
+2. [add devops](https://learn.microsoft.com/en-us/azure/devops/cli/?view=azure-devops):
+`az extension add --name azure-devops`
+3. add git aliases:
+`az devops configure --use-git-aliases true`
