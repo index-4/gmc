@@ -41,6 +41,13 @@ ch | -ch | --checkout                     : Short version of `git checkout`
 | co | “heading_desc1-desc2-…” | heading and _ can be omitted. But be warned: “_” and “-” still get parsed. |
 | r | “#1(GitHub issue number or Jira issue id)” | |
 
+### Usage
+#### Linux
+After downloading the binary from the Releases tab in GitHub, move gmc to /usr/local/bin:
+```
+sudo cp Downloads/gmc /usr/local/bin
+```
+
 ### azure configuration
 1. [install](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt) azure cli
 2. [add devops](https://learn.microsoft.com/en-us/azure/devops/cli/?view=azure-devops):
