@@ -9,6 +9,8 @@ from time import sleep
 
 flags: dict[str, str] = {}
 
+execution_path = os.getcwd()
+stash_directory = None
 
 def display_help():
     help_message = Help(
@@ -94,16 +96,21 @@ def git_pull():
     os.system("git pull")
 
 
+def traverse_up():
+    max_iter = 0  # max out at 10 dirs up
+    while not os.path.exists(".git") and max_iter < 10:
+        os.chdir("..")
+        max_iter += 1
+    return max_iter
+
+
 def git_magic_add(target_directory: str = None):
     if "na" in flags.keys():
         print("Preventing magic add")
         return
     stash_directory = target_directory
     if stash_directory is None:
-        max_iter = 0  # max out at 10 dirs up
-        while not os.path.exists(".git") and max_iter < 10:
-            os.chdir("..")
-            max_iter += 1
+        max_iter = traverse_up()
         stash_directory = os.getcwd()
         if max_iter == 10:
             print("Couldn't find git repository!")
@@ -131,14 +138,16 @@ def execute_tests():
             os.system(flags["test"])
         else:
             try:
-                os.system(TestMappings().mappings[os.getcwd()])
-            except KeyError:
+                os.chdir(execution_path)
+                os.system(TestMappings().get_by_relative_path(execution_path))
+                traverse_up()
+            except KeyError or TypeError:
                 print("Directory is not mapped for tests in config and no test command was given!")
                 sys.exit(404)
         print("Tests finished if you wanna abort the commit (CTRL + C) due to failed tests I'll give you 5 seconds...")
         try:
             sleep(5)
-        except KeyboardInterrupt:
+        except:
             print("Aborting commit due to failed tests")
             sys.exit(0)
 
