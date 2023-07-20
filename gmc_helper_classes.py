@@ -104,6 +104,11 @@ class TestMappings:
         for mapping in Config().content["public_config"]["test_mappings"]:
             self.mappings.update(mapping)
 
+    def get_by_relative_path(self, path: str):
+        for key in self.mappings:
+            if key in path:
+                return self.mappings[key]
+
 
 class Help:
     def __init__(self, description: str, options_n_descs: list):
