@@ -19,7 +19,7 @@ fs | -fs | --feature-start <feature_name> : starts a new git flow feature
 fi | -fi | --fix <fix_description>        : adds fix description to commit message; for more info about how to write descriptions see gmc confluence
 bs | -bs | --bugfix-start <bugfix_name>   : starts a new git flow bugfix
 co | -co | --commit-only <commit_desc>    : only stashes changes and adds commit message
-d | -d | --done                           : tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag
+d | -d | --done                           : tells gmc to finish the current feature / bugfix branch (auto detected)
 r | -r | --reference <issue_id>           : adds a reference to a GitHub or Jira issue
 !r | -!r | --random                       : push to origin with a random commit message from whatthecommit.com
 sc | -sc | --store-credentials            : inits the git credential helper process for the local repository

@@ -126,7 +126,6 @@ def check_flags(commit_message: str):
         commit_message += f'-m "references {flags["ref"]}" '
 
     if "done" in flags.keys():
-        commit_message += f'-m "changelog-relevant" '
         finish_flow = True
 
     return finish_flow, commit_message
@@ -176,7 +175,7 @@ def parse_feature(feature_message: str):
     os.system(f"git commit {message}")
     if finish_feature:
         if Config().content["public_config"]["default_git_handler"] == "git":
-            os.system(f"gh pr create")
+            os.system(f"gh pr create -B develop")
         else:
             project_name = Config().content["public_config"]["azure_project"]
             repo_name = os.getcwd().split("/")[-1]
