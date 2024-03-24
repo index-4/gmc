@@ -135,7 +135,7 @@ class Help:
 
     def __repr__(self):
         return (
-            f"{text2art('gmc')}\n{self.description}\n\nOptions:\n{self.parse_options()}"
+            f"\033[91m{text2art('gmc')}\033[0m\n{self.description}\n\nOptions:\n{self.parse_options()}"
         )
 
     def parse_options(self):
