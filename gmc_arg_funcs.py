@@ -158,7 +158,7 @@ def parse_feature(feature_message: str):
     try:
         feature_name, scope = feature_name.split("~")
     except ValueError:
-        pass # swallow if no scope
+        pass  # swallow if no scope
     changes = [change.strip() for change in changes.split("-")]
 
     # build commit message
