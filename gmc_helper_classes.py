@@ -34,7 +34,7 @@ class Batch:
         self._tasks.append(task)
 
     def run(self):
-        # sort by prio -> exec higher prioritised tasks first
+        # sort by prio -> exec higher prioritized tasks first
         self._tasks = sorted(self._tasks, key=lambda task: task.prio, reverse=True)
         for task in self._tasks:
             task.run()

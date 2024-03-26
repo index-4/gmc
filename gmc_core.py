@@ -40,7 +40,7 @@ def parse_args() -> list:
         print(f"UNKNOWN ERR: {ex}")
         sys.exit()
     # explicitly add magic add to tasks, if not single command or gmc only
-    if len(sys.argv) != 2:
+    if len(sys.argv) > 2 and not all(map(lambda arg: gmc_args.is_key_known(arg), sys.argv[1:])):
         tasks.insert(0, Task(git_magic_add, 2))
     return tasks
 

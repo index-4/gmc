@@ -44,7 +44,7 @@ def display_help():
             ),
             (
                 ["d", "-d", "--done"],
-                "tells gmc to finish the curent feature / bugfix branch (auto detected) and add a changelog-relevant flag",
+                "tells gmc to finish the curent feature / bugfix branch (auto detected)",
             ),
             (
                 ["t", "-t", "--test <test_command>"],
@@ -80,6 +80,18 @@ def display_help():
                 ["m", "-m", "--multi-pull"],
                 "Pull multiple repositories, in the current directory, at once",
             ),
+            (
+                ["wt", "-wt", "--work-tree"],
+                "Create a new git work tree and automatically check it out; always creates the work tree in \"hotfix\" dir"
+            ),
+            (
+                ["wtl", "-wtl", "--work-tree-list"],
+                "List created work trees"
+            ),
+            (
+                ["wtc", "-wtc", "--work-tree-close"],
+                "Automatically create PR and close work tree afterwards; commit message has to be given"
+            )
         ],
     )
     print(help_message)
@@ -151,6 +163,18 @@ def execute_tests():
             sys.exit(0)
 
 
+def create_pr(message: str):
+    if Config().content["public_config"]["default_git_handler"] == "git":
+        os.system(f"gh pr create -B develop")
+    else:
+        project_name = Config().content["public_config"]["azure_project"]
+        repo_name = os.getcwd().split("/")[-1]
+        work_items = ""
+        if "ref" in flags.keys():
+            work_items = f"--work-items {flags['ref'].replace('#', '')}"
+        os.system(f"git pr create --target-branch develop --project {project_name} --repository {repo_name} {work_items} --squash true --description {message.replace('-m ', '')}")
+
+
 def parse_feature(feature_message: str):
     finish_feature = False
     feature_name, changes = feature_message.split("_")
@@ -174,16 +198,7 @@ def parse_feature(feature_message: str):
 
     os.system(f"git commit {message}")
     if finish_feature:
-        if Config().content["public_config"]["default_git_handler"] == "git":
-            os.system(f"gh pr create -B develop")
-        else:
-            project_name = Config().content["public_config"]["azure_project"]
-            repo_name = os.getcwd().split("/")[-1]
-            work_items = ""
-            if "ref" in flags.keys():
-                work_items = f"--work-items {flags['ref'].replace('#', '')}"
-            os.system(f"git pr create --target-branch develop --project {project_name} --repository {repo_name} {work_items} --squash true --description {message.replace('-m ', '')}")
-
+        create_pr(message)
 
 def parse_feature_start(feature_name: str):
     os.system(f"git flow feature start {feature_name}")
@@ -220,15 +235,7 @@ def parse_fix(fix_message: str):
 
     os.system(f"git commit {message}")
     if finish_bugfix:
-        if Config().content["public_config"]["default_git_handler"] == "git":
-            os.system(f"gh pr create")
-        else:
-            project_name = Config().content["public_config"]["azure_project"]
-            repo_name = os.getcwd().split("/")[-1]
-            work_items = ""
-            if "ref" in flags.keys():
-                work_items = f"--work-items {flags['ref'].replace('#', '')}"
-            os.system(f"git pr create --target-branch develop --project {project_name} --repository {repo_name} {work_items} --squash true --description {message.replace('-m ', '')}")
+        create_pr(message)
 
 
 def parse_fix_start(fix_name: str):
@@ -315,6 +322,20 @@ def git_random_commit():
     os.system("git push")
 
 
+def create_worktree(branch_name: str | None = None):
+    os.system(f"git worktree add -b {branch_name if branch_name else 'hotfix'} ./hotfix")
+
+def list_worktrees():
+    os.system("git worktree list --porcelain")
+
+def close_worktree(commit_msg: str):
+    os.chdir("hotfix")
+    git_magic_add()
+    parse_commit_only(commit_msg)
+    create_pr("")  # dummy message for azure description
+    os.chdir("..")
+    os.system("git worktree remove hotfix")
+
 # stores functions that shall be executed by gmc; format (needs_args, prio, function)
 # needs_args: in range [0,2] -> [no, yes, optional]
 # prios (from high to low): 4 3 [2] 1 0; 2 is default
@@ -340,6 +361,9 @@ gmc_args = AliasDict(
         "d": (0, 2, lambda: flags.update({"done": None})),
         "c": (0, 0, lambda: Config().edit()),
         "m": (0, 0, multi_pull),
+        "wt": (2, 4, create_worktree),
+        "wtl": (0, 4, list_worktrees),
+        "wtc": (1, 4, close_worktree)
     },
     aliases={
         # help aliases
@@ -406,5 +430,14 @@ gmc_args = AliasDict(
         # multi-pull aliases
         "-m": "m",
         "--multi-pull": "m",
+        # create work tree aliases
+        "-wt": "wt",
+        "--work-tree": "wt",
+        # list work trees aliases
+        "-wtl": "wlt",
+        "--work-tree-list": "wtl",
+        # close work tree aliases
+        "-wtc": "wtc",
+        "--work-tree-close": "wtc",
     },
 )
