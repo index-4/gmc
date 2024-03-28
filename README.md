@@ -24,13 +24,15 @@ r | -r | --reference <issue_id>           : adds a reference to a GitHub or Jira
 !r | -!r | --random                       : push to origin with a random commit message from whatthecommit.com
 sc | -sc | --store-credentials            : inits the git credential helper process for the local repository
 i | -i | I | --init <git_repo_url>        : inits from a fresh git repo and adds git flow structure
+s | -s | S | --setup                      : kinda like init but sets up git flow from an existing repository
 p | -p | P | --push                       : tells gmc to push the current state
 !p | -!p | !P | --pull                    : tells gmc to pull from origin
 na | -na | --no-add                       : advises gmc to drop magic add (basically git add that searches for root git dir)
 c | -c | --config | --change-config       : change your gmc config in your preferred editor (per default nano)
 m | -m | --multi-pull                     : Pull multiple repositories, in the current directory, at once
-b | -b | --branch                         : Prints `git branch` output
-ch | -ch | --checkout                     : Short version of `git checkout`
+wt | -wt | --work-tree                    : Create a new git work tree and automatically check it out; always creates the work tree in "hotfix" dir
+wtl | -wtl | --work-tree-list             : List created work trees
+wtc | -wtc | --work-tree-close            : Automatically create PR and close work tree afterwards; commit message has to be given
 ```
 
 ### Argument format
