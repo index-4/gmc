@@ -5,6 +5,7 @@ from gmc_helper_classes import Help, AliasDict, TestMappings
 from gmc_config import Config
 import urllib.request
 from time import sleep
+import subprocess
 
 
 flags: dict[str, str] = {}
@@ -65,6 +66,10 @@ def display_help():
             (
                 ["i", "-i", "I", "--init <git_repo_url>"],
                 "inits from a fresh git repo and adds git flow structure",
+            ),
+            (
+                ["s", "-s", "S", "--setup"],
+                "kinda like init but sets up git flow from an existing repository"
             ),
             (["p", "-p", "P", "--push"], "tells gmc to push the current state"),
             (["!p", "-!p", "!P", "--pull"], "tells gmc to pull from origin"),
@@ -306,6 +311,28 @@ def git_init(git_url: str):
     os.system("git push --set-upstream origin develop")
 
 
+def setup():
+    print("setting up git flow structure")
+    branches = str(subprocess.check_output("git branch", shell=True))
+    if not "develop" in branches:
+        os.system("git branch develop")
+    
+        is_master = "master" in branches
+        if is_master:
+            os.system("git config --global gitflow.branch.master master")
+        else:
+            os.system("git config --global gitflow.branch.master main")
+        
+        os.system("git config --global gitflow.branch.development develop")
+
+        os.system("git flow init -fd")
+        os.system("git switch develop")
+        os.system("git push --set-upstream origin develop")
+    else:
+        print("git flow structure already given! gmc out (╯°□°)╯︵ ┻━┻")
+
+
+
 # just in case ¯\_(ツ)_/¯
 def git_status():
     os.system("git status")
@@ -355,6 +382,7 @@ gmc_args = AliasDict(
         "co": (1, 1, parse_commit_only),
         "sc": (0, 0, parse_store_credentials),
         "i": (1, 4, git_init),
+        "s": (0, 4, setup),
         "t": (2, 2, lambda command=None: flags.update({"test": command})),
         "r": (1, 2, lambda ref: flags.update({"ref": ref})),
         "!r": (0, 0, git_random_commit),
@@ -411,6 +439,10 @@ gmc_args = AliasDict(
         "-i": "i",
         "I": "i",
         "--init": "i",
+        # setup aliases
+        "-s": "s",
+        "S": "s",
+        "--setup": "s",
         # test aliases
         "-t": "t",
         "--test": "t",
