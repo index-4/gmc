@@ -382,7 +382,7 @@ gmc_args = AliasDict(
         "co": (1, 1, parse_commit_only),
         "sc": (0, 0, parse_store_credentials),
         "i": (1, 4, git_init),
-        "s": (0, 4, setup),
+        "se": (0, 4, setup),
         "t": (2, 2, lambda command=None: flags.update({"test": command})),
         "r": (1, 2, lambda ref: flags.update({"ref": ref})),
         "!r": (0, 0, git_random_commit),
