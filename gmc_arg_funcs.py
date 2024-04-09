@@ -68,7 +68,7 @@ def display_help():
                 "inits from a fresh git repo and adds git flow structure",
             ),
             (
-                ["s", "-s", "S", "--setup"],
+                ["se", "-se", "SE", "--setup"],
                 "kinda like init but sets up git flow from an existing repository"
             ),
             (["p", "-p", "P", "--push"], "tells gmc to push the current state"),
@@ -226,13 +226,13 @@ def parse_fix(fix_message: str):
 
     # build commit message
     message = f'-m "fix{f"({scope})" if scope else ""}: {fix_name} {Emojis.fix}" '  # header
-    message += f'-m "  reasons:'  # reasons (also opening quotes)
+    message += f'-m "reasons:'  # reasons (also opening quotes)
     for reason in reasons:
-        message += f"{os.linesep}    - {reason}"
-    message += f"{os.linesep}  solutions:"  # solutions
+        message += f"{os.linesep}  - {reason}"
+    message += f"{os.linesep * 2}solutions:"  # solutions
     for solution in solutions:
-        message += f"{os.linesep}    - {solution}"
-    message += '" '  # end reasons and solutions
+        message += f"{os.linesep}  - {solution}"
+    message += '"'  # end reasons and solutions
 
     finish_bugfix, message = check_flags(message)
 
@@ -440,9 +440,9 @@ gmc_args = AliasDict(
         "I": "i",
         "--init": "i",
         # setup aliases
-        "-s": "s",
-        "S": "s",
-        "--setup": "s",
+        "-se": "se",
+        "SE": "se",
+        "--setup": "se",
         # test aliases
         "-t": "t",
         "--test": "t",
