@@ -169,8 +169,16 @@ def execute_tests():
 
 
 def create_pr(message: str):
-    if Config().content["public_config"]["default_git_handler"] == "git":
-        os.system(f"gh pr create -B develop")
+    config = Config()
+    if config.content["public_config"]["default_git_handler"] == "git":
+        if config.content["public_config"]["gitflow_ignore"]:
+            branches = str(subprocess.check_output("git branch", shell=True))
+            if "master" in branches:
+                os.system("gh pr create -B master")
+            else:
+                os.system("gh pr create -B main")
+        else:
+            os.system(f"gh pr create -B develop")
     else:
         project_name = Config().content["public_config"]["azure_project"]
         repo_name = os.getcwd().split("/")[-1]
@@ -206,14 +214,17 @@ def parse_feature(feature_message: str):
         create_pr(message)
 
 def parse_feature_start(feature_name: str):
-    os.system(f"git flow feature start {feature_name}")
+    if Config().content["public_config"]["gitflow_ignore"]:
+        os.system(f"git branch feature/{feature_name}")
+        os.system(f"git switch feature/{feature_name}")
+    else:
+        os.system(f"git flow feature start {feature_name}")
     parse_commit_only(f"initial commit for feature {feature_name}_")
     os.system(f"git push --set-upstream origin feature/{feature_name}")
     sys.exit(0)
 
 
 def parse_fix(fix_message: str):
-    print(fix_message)
     finish_bugfix = False
     fix_name, reasons, solutions = fix_message.split("_")
     scope = None
@@ -244,7 +255,11 @@ def parse_fix(fix_message: str):
 
 
 def parse_fix_start(fix_name: str):
-    os.system(f"git flow bugfix start {fix_name}")
+    if Config().content["public_config"]["gitflow_ignore"]:
+        os.system(f"git branch bugfix/{fix_name}")
+        os.system(f"git switch bugfix/{fix_name}")
+    else:
+        os.system(f"git flow bugfix start {fix_name}")
     parse_commit_only(f"initial commit for fix {fix_name}_")
     os.system(f"git push --set-upstream origin bugfix/{fix_name}")
     sys.exit(0)
@@ -303,15 +318,19 @@ def git_init(git_url: str):
     os.system("git init")
     git_magic_add(".")
     parse_commit_only("initial commit_added README")
-    os.system("git branch -M master")
+    os.system("git branch -M main")
     os.system(f"git remote add origin {git_url}")
-    os.system("git push -u origin master")
-    os.system("git flow init -d")
-    os.system("git checkout develop")
-    os.system("git push --set-upstream origin develop")
+    os.system("git push -u origin main")
+    if not Config().content["public_config"]["gitflow_ignore"]:
+        os.system("git flow init -d")
+        os.system("git checkout develop")
+        os.system("git push --set-upstream origin develop")
 
 
 def setup():
+    if Config().content["public_config"]["gitflow_ignore"]:
+        print("git flow setup is not permitted in config! gmc out (╯°□°)╯︵ ┻━┻")
+        return
     print("setting up git flow structure")
     branches = str(subprocess.check_output("git branch", shell=True))
     if not "develop" in branches:

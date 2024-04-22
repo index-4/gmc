@@ -1,5 +1,8 @@
 # the editor you want to use as default when configuring gmc
-default_editor: code
+default_editor: nano
+
+# whether gmc should ignore the default git flow pattern and create feature / bug branches and PRs directly from and to main
+gitflow_ignore: false
 
 # can be git or azure
 default_git_handler: git
