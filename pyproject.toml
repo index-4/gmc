@@ -1,30 +1,19 @@
-[project]
+[tool.poetry]
 name = "gmc"
-version = "0.1.0"
-description = "Add your description here"
-authors = [
-    { name = "liquidiert", email = "haberederkorbinian@googlemail.com" }
-]
-dependencies = [
-    "black>=24.4.0",
-    "art>=6.1",
-    "appdirs>=1.4.4",
-    "pyinstaller>=6.6.0",
-    "pyyaml>=6.0.1",
-]
+version = "0.15.0"
+description = "A handy git commit formatter"
+authors = ["Korbinian Habereder"]
 readme = "README.md"
-requires-python = ">= 3.8"
+
+[tool.poetry.dependencies]
+python = "~3.12"
+black = "^24.4.2"
+art = "^6.2"
+pyyaml = "^6.0.1"
+pyinstaller = "^6.6.0"
+appdirs = "^1.4.4"
+
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.rye]
-managed = true
-dev-dependencies = []
-
-[tool.hatch.metadata]
-allow-direct-references = true
-
-[tool.hatch.build.targets.wheel]
-packages = ["gmc_core"]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
