@@ -1,19 +1,17 @@
-[tool.poetry]
+[project]
 name = "gmc"
-version = "0.15.0"
-description = "A handy git commit formatter"
-authors = ["Korbinian Habereder"]
+version = "0.1.0"
+description = "Add your description here"
 readme = "README.md"
+requires-python = ">=3.12.2"
+dependencies = [
+    "appdirs>=1.4.4",
+    "art>=6.5",
+    "pyinstaller>=6.15.0",
+    "pyyaml>=6.0.2",
+]
 
-[tool.poetry.dependencies]
-python = "~3.12"
-black = "^24.4.2"
-art = "^6.2"
-pyyaml = "^6.0.1"
-pyinstaller = "^6.6.0"
-appdirs = "^1.4.4"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+    "ruff>=0.12.11",
+]
